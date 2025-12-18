@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{admin/layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin 2 - Blank</title>
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+
+
+        <!-- Begin Page Content -->
+        <div layout:fragment="content" class="container-fluid">
+            <a href="/dashboard/product/create">Create</a>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Actions</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product, i : ${products}">
+                    <th th:text="${i.index+1}" scope="row">1</th>
+                    <td th:text="${product.name}">Mark</td>
+                    <td th:text="${product.price}">Mark</td>
+                    <td th:text="${product.category.name}">Mark</td>
+                    <td>
+                        <a th:href="'/dashboard/product/update/'+${product.id}">Edit</a>
+                        <a href="">Delete</a>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+        <!-- /.container-fluid -->
+
+
+
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+</body>
+
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{admin/layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin 2 - Blank</title>
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+
+
+        <!-- Begin Page Content -->
+        <div layout:fragment="content" class="container-fluid">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4>Create New Size</h4>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="post">
+
+                        <!-- Row 1 -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Name</label>
+                                <input type="text" th:value="${color.name}" class="form-control" name="name" placeholder="Enter product name">
+                            </div>
+                            <input type="submit" value="Update" class="btn btn-warning">
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+
+
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+
+</body>
+
+</html>

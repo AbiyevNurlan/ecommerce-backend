@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{admin/layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin 2 - Blank</title>
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+
+
+            <!-- Begin Page Content -->
+            <div layout:fragment="content" class="container-fluid">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4>Create New Product</h4>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form method="post" >
+
+                            <!-- Row 1 -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" name="name" placeholder="Enter product name">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Barcode</label>
+                                    <input type="text" class="form-control" name="barcode" placeholder="Enter barcode">
+                                </div>
+                            </div>
+
+                            <!-- Row 2 -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Price</label>
+                                    <input type="number" class="form-control" name="price" step="0.01">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Discount (%)</label>
+                                    <input type="number" class="form-control" name="discount" step="0.01">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label ">Category</label>
+                                    <select  class="form-select form-control" name="categoryId">
+                                        <option selected disabled>Choose category</option>
+                                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">Category A</option>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Short Description -->
+                            <div class="mb-3">
+                                <label class="form-label">Short Description</label>
+                                <textarea class="form-control" name="shortDescription" rows="2"></textarea>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-3">
+                                <label class="form-label">Full Description</label>
+                                <textarea class="form-control" name="description" rows="4"></textarea>
+                            </div>
+
+                            <!-- Specification -->
+                            <div class="mb-3">
+                                <label class="form-label">Specification</label>
+                                <textarea class="form-control" name="specification" rows="4"></textarea>
+                            </div>
+
+
+
+                            <div class="mb-3">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li th:each="color, i : ${colors}" class="nav-item" role="presentation">
+                                        <button th:class="'nav-link '+${i.index == 0 ? 'active' : ''}" th:id="'home-tab'+${color.id}" data-bs-toggle="tab" th:data-bs-target="'#home'+${color.id}" type="button" role="tab" th:text="${color.name}" aria-controls="home" aria-selected="true">Red</button>
+                                    </li>
+
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div  th:each="color, i : ${colors}"  th:class="'tab-pane fade show ' +${i.index == 0 ? 'active' : ''} " th:id="'home'+${color.id}" role="tabpanel" aria-labelledby="home-tab">
+                                        <div class="row">
+                                            <input type="hidden" th:value="${color.id}" th:name="'colorSizes['+${i.index}+'].colorId'">
+                                            <span th:each="size, j : ${sizes}" class="col-md-1">
+                                                <label th:text="${size.size}" class="form-label">XS</label>
+                                                <input type="hidden" th:value="${size.id}" th:name="'colorSizes['+${i.index}+'].productSizes['+${j.index}+'].sizeId'">
+                                                <input  type="number" value="0" class="form-control" th:name="'colorSizes['+${i.index}+'].productSizes['+${j.index}+'].quantity'" step="0.01">
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <!-- Photos -->
+<!--                            <div class="mb-3">-->
+<!--                                <label class="form-label">Photos</label>-->
+<!--                                <input type="file" class="form-control" name="photos[]" multiple>-->
+<!--                                <small class="text-muted">You can upload multiple photos.</small>-->
+<!--                            </div>-->
+
+                            <!-- Submit -->
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-success px-4">Create</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+
+
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+
+</body>
+
+</html>
