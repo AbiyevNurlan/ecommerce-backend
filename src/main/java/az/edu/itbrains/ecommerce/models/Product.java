@@ -2,18 +2,20 @@ package az.edu.itbrains.ecommerce.models;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Getter
-@Setter
+@Data
+@Builder
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Product {
 
     @Id
@@ -46,14 +48,4 @@ public class Product {
     private List<OrderItem> orderItems = new ArrayList<>();
 
 
-    public Product(String name, String description, String shortDescription, String specification, double price, double discount, String barcode, Category category) {
-        this.name = name;
-        this.description = description;
-        this.shortDescription = shortDescription;
-        this.specification = specification;
-        this.price = price;
-        this.discount = discount;
-        this.barcode = barcode;
-        this.category = category;
-    }
 }

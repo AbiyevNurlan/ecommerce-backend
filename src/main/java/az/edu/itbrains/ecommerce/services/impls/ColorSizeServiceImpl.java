@@ -11,7 +11,6 @@ import az.edu.itbrains.ecommerce.services.ColorService;
 import az.edu.itbrains.ecommerce.services.ColorSizeService;
 import az.edu.itbrains.ecommerce.services.SizeService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ColorSizeServiceImpl implements ColorSizeService {
     private final ColorSizeRepository colorSizeRepository;
-    private final ModelMapper modelMapper;
     private final ColorService colorService;
     private final SizeService sizeService;
 

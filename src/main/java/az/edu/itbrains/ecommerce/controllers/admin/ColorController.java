@@ -3,8 +3,6 @@ package az.edu.itbrains.ecommerce.controllers.admin;
 import az.edu.itbrains.ecommerce.dtos.color.ColorDto;
 import az.edu.itbrains.ecommerce.dtos.color.ColorCreateDto;
 import az.edu.itbrains.ecommerce.dtos.color.ColorUpdateDto;
-import az.edu.itbrains.ecommerce.services.CategoryService;
-import az.edu.itbrains.ecommerce.services.ColorService;
 import az.edu.itbrains.ecommerce.services.ColorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -38,7 +36,7 @@ public class ColorController {
 
     @PostMapping("/create")
     public String create(ColorCreateDto colorCreateDto){
-        boolean result = colorService.saveColor(colorCreateDto);
+        colorService.saveColor(colorCreateDto);
         return "redirect:/dashboard/color";
     }
 
@@ -52,7 +50,7 @@ public class ColorController {
 
     @PostMapping("/update/{id}")
     public String edit(@PathVariable Long id, ColorUpdateDto colorUpdateDto){
-        boolean result = colorService.updateColor(id, colorUpdateDto);
+        colorService.updateColor(id, colorUpdateDto);
         return "redirect:/dashboard/color";
     }
 

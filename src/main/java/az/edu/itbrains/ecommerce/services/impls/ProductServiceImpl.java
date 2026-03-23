@@ -6,15 +6,14 @@ import az.edu.itbrains.ecommerce.models.Category;
 import az.edu.itbrains.ecommerce.models.Product;
 import az.edu.itbrains.ecommerce.repositories.ProductRepository;
 import az.edu.itbrains.ecommerce.services.CategoryService;
-import az.edu.itbrains.ecommerce.services.ColorService;
 import az.edu.itbrains.ecommerce.services.ColorSizeService;
 import az.edu.itbrains.ecommerce.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -39,11 +38,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDetailDto getProductDetail(Long id) {
+        Objects.requireNonNull(id, "Product id must not be null");
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id, "Product"));
-        if (product != null) {
-            return modelMapper.map(product, ProductDetailDto.class);
-        }
-        return null;
+        return modelMapper.map(product, ProductDetailDto.class);
     }
 
     @Override
@@ -60,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(category);
         productRepository.save(product);
 
-        boolean result = colorSizeService.createColorSize(productCreateDto.getColorSizes(), product);
+        colorSizeService.createColorSize(productCreateDto.getColorSizes(), product);
 
     }
 
@@ -94,11 +91,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductBestSellerDto> getBestSellerProducts() {
         List<Product> products = productRepository.findAll();
+        if (!products.isEmpty()) {
+            return products.stream().map(product -> modelMapper.map(product, ProductBestSellerDto.class)).toList();
+        }
         return List.of();
     }
 
     @Override
     public Product getProductById(Long productId) {
+        Objects.requireNonNull(productId, "Product id must not be null");
         return productRepository.findById(productId).orElseThrow();
     }
 }

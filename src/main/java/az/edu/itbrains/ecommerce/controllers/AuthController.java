@@ -1,7 +1,6 @@
 package az.edu.itbrains.ecommerce.controllers;
 
 
-import az.edu.itbrains.ecommerce.dtos.auth.LoginDto;
 import az.edu.itbrains.ecommerce.dtos.auth.RegisterDto;
 import az.edu.itbrains.ecommerce.services.UserService;
 import jakarta.validation.Valid;
@@ -40,7 +39,7 @@ public class AuthController {
             model.addAttribute("registerDto", registerDto);
             return "auth/register.html";
         }
-        boolean result = userService.registerUser(registerDto);
+        userService.registerUser(registerDto);
 
         return "redirect:/login";
     }

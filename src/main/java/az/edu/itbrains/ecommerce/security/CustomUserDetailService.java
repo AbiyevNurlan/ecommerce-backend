@@ -3,8 +3,6 @@ package az.edu.itbrains.ecommerce.security;
 import az.edu.itbrains.ecommerce.models.User;
 import az.edu.itbrains.ecommerce.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class CustomUserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;

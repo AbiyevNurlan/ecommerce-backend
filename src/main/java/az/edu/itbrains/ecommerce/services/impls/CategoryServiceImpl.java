@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -44,6 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryUpdateDto findUpdatedCategory(Long id) {
+        Objects.requireNonNull(id, "Category id must not be null");
         Category category = categoryRepository.findById(id).orElseThrow();
         CategoryUpdateDto categoryUpdateDto = modelMapper.map(category, CategoryUpdateDto.class);
         return categoryUpdateDto;
@@ -51,6 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public boolean updateCategory(Long id, CategoryUpdateDto categoryUpdateDto) {
+        Objects.requireNonNull(id, "Category id must not be null");
         Category category = categoryRepository.findById(id).orElseThrow();
         category.setName(categoryUpdateDto.getName());
         categoryRepository.save(category);
@@ -59,6 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategoryById(Long categoryId) {
+        Objects.requireNonNull(categoryId, "Category id must not be null");
         return categoryRepository.findById(categoryId).orElseThrow();
     }
 }

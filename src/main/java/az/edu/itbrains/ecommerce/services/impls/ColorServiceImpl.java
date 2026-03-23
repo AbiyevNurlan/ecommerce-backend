@@ -4,7 +4,6 @@ import az.edu.itbrains.ecommerce.dtos.color.ColorCreateDto;
 import az.edu.itbrains.ecommerce.dtos.color.ColorDto;
 import az.edu.itbrains.ecommerce.dtos.color.ColorUpdateDto;
 import az.edu.itbrains.ecommerce.models.Color;
-import az.edu.itbrains.ecommerce.models.Size;
 import az.edu.itbrains.ecommerce.repositories.ColorRepository;
 import az.edu.itbrains.ecommerce.services.ColorService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -45,6 +45,7 @@ public class ColorServiceImpl implements ColorService {
 
     @Override
     public ColorUpdateDto findUpdatedColor(Long id) {
+        Objects.requireNonNull(id, "Color id must not be null");
         Color color = colorRepository.findById(id).orElseThrow();
         ColorUpdateDto colorUpdateDto = modelMapper.map(color, ColorUpdateDto.class);
         return colorUpdateDto;
@@ -52,6 +53,7 @@ public class ColorServiceImpl implements ColorService {
 
     @Override
     public boolean updateColor(Long id, ColorUpdateDto colorUpdateDto) {
+        Objects.requireNonNull(id, "Color id must not be null");
         Color color = colorRepository.findById(id).orElseThrow();
         color.setName(colorUpdateDto.getName());
         colorRepository.save(color);
@@ -60,6 +62,7 @@ public class ColorServiceImpl implements ColorService {
 
     @Override
     public Color getColorById(Long colorId) {
+        Objects.requireNonNull(colorId, "Color id must not be null");
         return colorRepository.findById(colorId).orElseThrow();
     }
 

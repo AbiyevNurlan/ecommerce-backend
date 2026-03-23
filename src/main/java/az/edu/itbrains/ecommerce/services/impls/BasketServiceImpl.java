@@ -1,7 +1,6 @@
 package az.edu.itbrains.ecommerce.services.impls;
 
 import az.edu.itbrains.ecommerce.dtos.basket.BasketAddDto;
-import az.edu.itbrains.ecommerce.dtos.basket.BasketUserDto;
 import az.edu.itbrains.ecommerce.models.Basket;
 import az.edu.itbrains.ecommerce.models.Product;
 import az.edu.itbrains.ecommerce.models.User;
@@ -10,17 +9,13 @@ import az.edu.itbrains.ecommerce.services.BasketService;
 import az.edu.itbrains.ecommerce.services.ProductService;
 import az.edu.itbrains.ecommerce.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class BasketServiceImpl implements BasketService {
 
     private final BasketRepository basketRepository;
-    private final ModelMapper modelMapper;
     private final UserService userService;
     private final ProductService productService;
 
@@ -38,7 +33,6 @@ public class BasketServiceImpl implements BasketService {
             basket.setUser(user);
             basket.setProduct(product);
             basket.setQuantity(1);
-            basket.setQuantity(basket.getQuantity());
 
             basketRepository.save(basket);
         }

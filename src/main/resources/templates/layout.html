@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
     <meta charset="UTF-8">
@@ -15,14 +15,14 @@
           rel="stylesheet">
 
     <!-- Css Styles -->
-    <link rel="stylesheet" href="/front/css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="/front/css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="/front/css/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="/front/css/jquery-ui.min.css" type="text/css">
-    <link rel="stylesheet" href="/front/css/magnific-popup.css" type="text/css">
-    <link rel="stylesheet" href="/front/css/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="/front/css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="/front/css/style.css" type="text/css">
+    <link rel="stylesheet" th:href="@{/front/css/bootstrap.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/front/css/font-awesome.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/front/css/elegant-icons.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/front/css/jquery-ui.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/front/css/magnific-popup.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/front/css/owl.carousel.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/front/css/slicknav.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/front/css/style.css}" type="text/css">
 </head>
 
 <body>
@@ -45,7 +45,7 @@
         </a></li>
     </ul>
     <div class="offcanvas__logo">
-        <a href="./index.html"><img src="img/logo.png" alt=""></a>
+        <a th:href="@{/}"><img th:src="@{/front/img/logo.png}" alt=""></a>
     </div>
     <div id="mobile-menu-wrap"></div>
     <div class="offcanvas__auth">
@@ -61,21 +61,21 @@
         <div class="row">
             <div class="col-xl-3 col-lg-2">
                 <div class="header__logo">
-                    <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                    <a th:href="@{/}"><img th:src="@{/front/img/logo.png}" alt=""></a>
                 </div>
             </div>
             <div class="col-xl-6 col-lg-7">
                 <nav class="header__menu">
                     <ul>
-                        <li class="active"><a href="./index.html">Home</a></li>
+                        <li class="active"><a th:href="@{/}">Home</a></li>
                         <li><a href="#">Women’s</a></li>
                         <li><a href="#">Men’s</a></li>
-                        <li><a href="./shop.html">Shop</a></li>
+                        <li><a th:href="@{/shop}">Shop</a></li>
                         <li><a href="#">Pages</a>
                             <ul class="dropdown">
-                                <li><a href="./product-details.html">Product Details</a></li>
-                                <li><a href="./shop-cart.html">Shop Cart</a></li>
-                                <li><a href="./checkout.html">Checkout</a></li>
+                                <li><a th:href="@{/shop/detail}">Product Details</a></li>
+                                <li><a th:href="@{/cart}">Shop Cart</a></li>
+                                <li><a th:href="@{/cart/checkout}">Checkout</a></li>
                                 <li><a href="./blog-details.html">Blog Details</a></li>
                             </ul>
                         </li>
@@ -119,7 +119,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                <div class="instagram__item set-bg" data-setbg="img/instagram/insta-1.jpg">
+                <div class="instagram__item set-bg" th:attr="data-setbg=@{/front/img/instagram/insta-1.jpg}">
                     <div class="instagram__text">
                         <i class="fa fa-instagram"></i>
                         <a href="#">@ ashion_shop</a>
@@ -127,7 +127,7 @@
                 </div>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                <div class="instagram__item set-bg" data-setbg="img/instagram/insta-2.jpg">
+                <div class="instagram__item set-bg" th:attr="data-setbg=@{/front/img/instagram/insta-2.jpg}">
                     <div class="instagram__text">
                         <i class="fa fa-instagram"></i>
                         <a href="#">@ ashion_shop</a>
@@ -135,7 +135,7 @@
                 </div>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                <div class="instagram__item set-bg" data-setbg="img/instagram/insta-3.jpg">
+                <div class="instagram__item set-bg" th:attr="data-setbg=@{/front/img/instagram/insta-3.jpg}">
                     <div class="instagram__text">
                         <i class="fa fa-instagram"></i>
                         <a href="#">@ ashion_shop</a>
@@ -143,7 +143,7 @@
                 </div>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                <div class="instagram__item set-bg" data-setbg="img/instagram/insta-4.jpg">
+                <div class="instagram__item set-bg" th:attr="data-setbg=@{/front/img/instagram/insta-4.jpg}">
                     <div class="instagram__text">
                         <i class="fa fa-instagram"></i>
                         <a href="#">@ ashion_shop</a>
@@ -151,7 +151,7 @@
                 </div>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                <div class="instagram__item set-bg" data-setbg="img/instagram/insta-5.jpg">
+                <div class="instagram__item set-bg" th:attr="data-setbg=@{/front/img/instagram/insta-5.jpg}">
                     <div class="instagram__text">
                         <i class="fa fa-instagram"></i>
                         <a href="#">@ ashion_shop</a>
@@ -159,7 +159,7 @@
                 </div>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                <div class="instagram__item set-bg" data-setbg="img/instagram/insta-6.jpg">
+                <div class="instagram__item set-bg" th:attr="data-setbg=@{/front/img/instagram/insta-6.jpg}">
                     <div class="instagram__text">
                         <i class="fa fa-instagram"></i>
                         <a href="#">@ ashion_shop</a>
@@ -179,16 +179,16 @@
             <div class="col-lg-4 col-md-6 col-sm-7">
                 <div class="footer__about">
                     <div class="footer__logo">
-                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                        <a th:href="@{/}"><img th:src="@{/front/img/logo.png}" alt=""></a>
                     </div>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
                         cilisis.</p>
                     <div class="footer__payment">
-                        <a href="#"><img src="img/payment/payment-1.png" alt=""></a>
-                        <a href="#"><img src="img/payment/payment-2.png" alt=""></a>
-                        <a href="#"><img src="img/payment/payment-3.png" alt=""></a>
-                        <a href="#"><img src="img/payment/payment-4.png" alt=""></a>
-                        <a href="#"><img src="img/payment/payment-5.png" alt=""></a>
+                        <a href="#"><img th:src="@{/front/img/payment/payment-1.png}" alt=""></a>
+                        <a href="#"><img th:src="@{/front/img/payment/payment-2.png}" alt=""></a>
+                        <a href="#"><img th:src="@{/front/img/payment/payment-3.png}" alt=""></a>
+                        <a href="#"><img th:src="@{/front/img/payment/payment-4.png}" alt=""></a>
+                        <a href="#"><img th:src="@{/front/img/payment/payment-5.png}" alt=""></a>
                     </div>
                 </div>
             </div>
@@ -256,16 +256,16 @@
 <!-- Search End -->
 
 <!-- Js Plugins -->
-<script src="/front/js/jquery-3.3.1.min.js"></script>
-<script src="/front/js/bootstrap.min.js"></script>
-<script src="/front/js/jquery.magnific-popup.min.js"></script>
-<script src="/front/js/jquery-ui.min.js"></script>
-<script src="/front/js/mixitup.min.js"></script>
-<script src="/front/js/jquery.countdown.min.js"></script>
-<script src="/front/js/jquery.slicknav.js"></script>
-<script src="/front/js/owl.carousel.min.js"></script>
-<script src="/front/js/jquery.nicescroll.min.js"></script>
-<script src="/front/js/main.js"></script>
+<script th:src="@{/front/js/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/front/js/bootstrap.min.js}"></script>
+<script th:src="@{/front/js/jquery.magnific-popup.min.js}"></script>
+<script th:src="@{/front/js/jquery-ui.min.js}"></script>
+<script th:src="@{/front/js/mixitup.min.js}"></script>
+<script th:src="@{/front/js/jquery.countdown.min.js}"></script>
+<script th:src="@{/front/js/jquery.slicknav.js}"></script>
+<script th:src="@{/front/js/owl.carousel.min.js}"></script>
+<script th:src="@{/front/js/jquery.nicescroll.min.js}"></script>
+<script th:src="@{/front/js/main.js}"></script>
 </body>
 
 </html>

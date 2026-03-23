@@ -4,8 +4,6 @@ import az.edu.itbrains.ecommerce.dtos.category.CategoryDto;
 import az.edu.itbrains.ecommerce.dtos.category.CategoryCreateDto;
 import az.edu.itbrains.ecommerce.dtos.category.CategoryUpdateDto;
 import az.edu.itbrains.ecommerce.services.CategoryService;
-import az.edu.itbrains.ecommerce.services.CategoryService;
-import az.edu.itbrains.ecommerce.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +21,6 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-
     @GetMapping
     public String index(Model model){
         List<CategoryDto> categoryDtoList = categoryService.getAllCategories();
@@ -38,10 +35,9 @@ public class CategoryController {
 
     @PostMapping("/create")
     public String create(CategoryCreateDto categoryCreateDto){
-        boolean result = categoryService.saveCategory(categoryCreateDto);
+        categoryService.saveCategory(categoryCreateDto);
         return "redirect:/dashboard/category";
     }
-
 
     @GetMapping("/update/{id}")
     public String edit(@PathVariable Long id, Model model){
@@ -52,16 +48,12 @@ public class CategoryController {
 
     @PostMapping("/update/{id}")
     public String edit(@PathVariable Long id, CategoryUpdateDto categoryUpdateDto){
-        boolean result = categoryService.updateCategory(id, categoryUpdateDto);
+        categoryService.updateCategory(id, categoryUpdateDto);
         return "redirect:/dashboard/category";
     }
-
-
-
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id){
         return "admin/category/delete.html";
     }
-
 }

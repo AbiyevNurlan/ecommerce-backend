@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -44,6 +45,7 @@ public class SizeServiceImpl implements SizeService {
 
     @Override
     public SizeUpdateDto findUpdatedSize(Long id) {
+        Objects.requireNonNull(id, "Size id must not be null");
         Size size = sizeRepository.findById(id).orElseThrow();
         SizeUpdateDto sizeUpdateDto = modelMapper.map(size, SizeUpdateDto.class);
         return sizeUpdateDto;
@@ -51,14 +53,16 @@ public class SizeServiceImpl implements SizeService {
 
     @Override
     public boolean updateSize(Long id, SizeUpdateDto sizeUpdateDto) {
+        Objects.requireNonNull(id, "Size id must not be null");
         Size size = sizeRepository.findById(id).orElseThrow();
-        size.setSize(sizeUpdateDto.getSize ());
+        size.setSize(sizeUpdateDto.getSize());
         sizeRepository.save(size);
         return true;
     }
 
     @Override
     public Size getSizeById(Long sizeId) {
+        Objects.requireNonNull(sizeId, "Size id must not be null");
         return sizeRepository.findById(sizeId).orElseThrow();
     }
 }

@@ -3,7 +3,6 @@ package az.edu.itbrains.ecommerce.controllers;
 
 import az.edu.itbrains.ecommerce.dtos.product.ProductDetailDto;
 import az.edu.itbrains.ecommerce.services.ProductService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

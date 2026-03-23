@@ -4,7 +4,6 @@ import az.edu.itbrains.ecommerce.dtos.color.ColorCreateDto;
 import az.edu.itbrains.ecommerce.dtos.color.ColorDto;
 import az.edu.itbrains.ecommerce.dtos.color.ColorUpdateDto;
 import az.edu.itbrains.ecommerce.models.Color;
-import az.edu.itbrains.ecommerce.models.Size;
 
 import java.util.List;
 
