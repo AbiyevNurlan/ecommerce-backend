@@ -2,7 +2,7 @@ package az.edu.itbrains.ecommerce.dtos.product;
 
 import az.edu.itbrains.ecommerce.dtos.color.ColorDto;
 import az.edu.itbrains.ecommerce.dtos.photo.PhotoDto;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,8 +30,10 @@ public class ProductUpdateDto {
     private double discount;
     @Size(min = 8, max = 8)
     private String barcode;
+    private boolean featured;
+    private boolean hotTrending;
 
-    @NotBlank(message = "Category bos ola bilmez")
+    @NotNull(message = "Category bos ola bilmez")
     private Long categoryId;
 
     private List<ColorDto> colors = new ArrayList<>();

@@ -16,7 +16,8 @@ public class ShopController {
     private final ProductService productService;
 
     @GetMapping("/shop")
-    public String shop() {
+    public String shop(Model model) {
+        model.addAttribute("products", productService.getDashboardProducts());
         return "shop/shop.html";
     }
 

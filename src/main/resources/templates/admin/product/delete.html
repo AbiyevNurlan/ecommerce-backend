@@ -1,36 +1,41 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:layout="http://www.w3.org/1999/xhtml"
+                xmlns:th="http://www.thymeleaf.org"
                 layout:decorate="~{admin/layout}">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>SB Admin 2 - Blank</title>
-
+    <title>Delete Product</title>
 </head>
 
 <body id="page-top">
-
-<!-- Page Wrapper -->
 <div id="wrapper">
-
-
-    <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
+        <div layout:fragment="content" class="container-fluid">
 
-
-
-            <!-- Begin Page Content -->
-            <div layout:fragment="content" class="container-fluid">
-
-
+            <h2 class="mb-4">Delete Product</h2>
+            <div class="card border-danger">
+                <div class="card-body">
+                    <p class="card-text">
+                        Are you sure you want to delete product:
+                        <strong th:text="${productName}"></strong>?
+                    </p>
+                    <!-- POST form with Thymeleaf CSRF token -->
+                    <form th:action="@{/dashboard/product/delete/{id}(id=${productId})}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                        <a th:href="@{/dashboard/product}" class="btn btn-secondary ms-2">Cancel</a>
+                    </form>
+                </div>
             </div>
-            <!-- /.container-fluid -->
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
 
 
 

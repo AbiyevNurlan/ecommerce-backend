@@ -53,7 +53,16 @@ public class CategoryController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id){
+    public String deleteConfirm(@PathVariable Long id, Model model) {
+        CategoryUpdateDto category = categoryService.findUpdatedCategory(id);
+        model.addAttribute("category", category);
+        model.addAttribute("categoryId", id);
         return "admin/category/delete.html";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        return "redirect:/dashboard/category";
     }
 }

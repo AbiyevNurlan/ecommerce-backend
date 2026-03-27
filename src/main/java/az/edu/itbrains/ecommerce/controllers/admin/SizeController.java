@@ -58,8 +58,17 @@ public class SizeController {
 
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id){
+    public String deleteConfirm(@PathVariable Long id, Model model) {
+        SizeUpdateDto sizeUpdateDto = sizeService.findUpdatedSize(id);
+        model.addAttribute("size", sizeUpdateDto);
+        model.addAttribute("sizeId", id);
         return "admin/size/delete.html";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        sizeService.deleteSize(id);
+        return "redirect:/dashboard/size";
     }
 
 }

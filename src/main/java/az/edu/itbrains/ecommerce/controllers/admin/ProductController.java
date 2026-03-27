@@ -60,12 +60,20 @@ public class ProductController {
 
 
     @GetMapping("/update/{id}")
-    public String edit(@PathVariable Long id){
+    public String edit(@PathVariable Long id, Model model){
+        List<ColorDto> colorDtoList = colorService.getAllColors();
+        List<SizeDto> sizeDtoList = sizeService.getAllSizes();
+        List<CategoryDto> categoryDtoList = categoryService.getAllCategories();
+        model.addAttribute("product", productService.getProductById(id));
+        model.addAttribute("colors", colorDtoList);
+        model.addAttribute("sizes", sizeDtoList);
+        model.addAttribute("categories", categoryDtoList);
         return "admin/product/update.html";
     }
 
     @PostMapping("/update/{id}")
     public String edit(@PathVariable Long id, ProductUpdateDto productUpdateDto){
+        productService.updateProduct(id, productUpdateDto);
         return "redirect:/dashboard/product";
     }
 
@@ -73,8 +81,16 @@ public class ProductController {
 
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id){
+    public String deleteConfirm(@PathVariable Long id, Model model) {
+        model.addAttribute("productName", productService.getProductById(id).getName());
+        model.addAttribute("productId", id);
         return "admin/product/delete.html";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return "redirect:/dashboard/product";
     }
 
 

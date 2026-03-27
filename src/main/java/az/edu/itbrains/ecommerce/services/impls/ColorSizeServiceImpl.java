@@ -12,6 +12,7 @@ import az.edu.itbrains.ecommerce.services.ColorSizeService;
 import az.edu.itbrains.ecommerce.services.SizeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,30 +20,26 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ColorSizeServiceImpl implements ColorSizeService {
+
     private final ColorSizeRepository colorSizeRepository;
     private final ColorService colorService;
     private final SizeService sizeService;
 
     @Override
+    @Transactional
     public boolean createColorSize(List<ColorSizeCreateDto> colorSizes, Product product) {
-
-       try {
-           for (ColorSizeCreateDto colorSizeCreateDto : colorSizes) {
-               for (ColorProductCreateDto colorProductCreateDto : colorSizeCreateDto.getProductSizes()) {
-                   Color color = colorService.getColorById(colorSizeCreateDto.getColorId());
-                   Size size = sizeService.getSizeById(colorProductCreateDto.getSizeId());
-                   ColorSize colorSize = new ColorSize();
-                   colorSize.setProduct(product);
-                   colorSize.setColor(color);
-                   colorSize.setQuantity(colorProductCreateDto.getQuantity());
-                   colorSize.setSize(size);
-                   colorSizeRepository.save(colorSize);
-               }
-           }
-           return true;
-       }catch (Exception e){
-           System.out.println(e.getMessage());
-           return false;
-       }
+        for (ColorSizeCreateDto colorSizeCreateDto : colorSizes) {
+            for (ColorProductCreateDto colorProductCreateDto : colorSizeCreateDto.getProductSizes()) {
+                Color color = colorService.getColorById(colorSizeCreateDto.getColorId());
+                Size size = sizeService.getSizeById(colorProductCreateDto.getSizeId());
+                ColorSize colorSize = new ColorSize();
+                colorSize.setProduct(product);
+                colorSize.setColor(color);
+                colorSize.setQuantity(colorProductCreateDto.getQuantity());
+                colorSize.setSize(size);
+                colorSizeRepository.save(colorSize);
+            }
+        }
+        return true;
     }
 }

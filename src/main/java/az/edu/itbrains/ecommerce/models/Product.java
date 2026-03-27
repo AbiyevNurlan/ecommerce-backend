@@ -4,14 +4,16 @@ package az.edu.itbrains.ecommerce.models;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Data
+@Getter
+@Setter
 @Builder
 @Entity
 @NoArgsConstructor
@@ -38,12 +40,15 @@ public class Product {
     @ManyToOne
     private Category category;
 
+    @Builder.Default
     @OneToMany(mappedBy = "product")
     private List<ColorSize> colorSizes = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "product")
     private List<Photo> photos = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "product")
     private List<OrderItem> orderItems = new ArrayList<>();
 

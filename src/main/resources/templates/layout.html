@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="zxx" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -49,8 +51,17 @@
     </div>
     <div id="mobile-menu-wrap"></div>
     <div class="offcanvas__auth">
-        <a href="#">Login</a>
-        <a href="#">Register</a>
+        <span sec:authorize="isAuthenticated()">
+            <a th:href="@{/orders/my}" sec:authentication="name">Account</a>
+            <form th:action="@{/logout}" method="post" style="display:inline">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" style="background:none;border:none;cursor:pointer;color:inherit">Logout</button>
+            </form>
+        </span>
+        <span sec:authorize="!isAuthenticated()">
+            <a th:href="@{/login}">Login</a>
+            <a th:href="@{/register}">Register</a>
+        </span>
     </div>
 </div>
 <!-- Offcanvas Menu End -->
@@ -68,36 +79,41 @@
                 <nav class="header__menu">
                     <ul>
                         <li class="active"><a th:href="@{/}">Home</a></li>
-                        <li><a href="#">Women’s</a></li>
-                        <li><a href="#">Men’s</a></li>
+                        <li><a th:href="@{/shop}">Women's</a></li>
+                        <li><a th:href="@{/shop}">Men's</a></li>
                         <li><a th:href="@{/shop}">Shop</a></li>
                         <li><a href="#">Pages</a>
                             <ul class="dropdown">
-                                <li><a th:href="@{/shop/detail}">Product Details</a></li>
-                                <li><a th:href="@{/cart}">Shop Cart</a></li>
+                                <li><a th:href="@{/shop}">Shop</a></li>
+                                <li><a th:href="@{/basket}">Shopping Cart</a></li>
                                 <li><a th:href="@{/cart/checkout}">Checkout</a></li>
-                                <li><a href="./blog-details.html">Blog Details</a></li>
+                                <li><a th:href="@{/orders/my}">My Orders</a></li>
                             </ul>
                         </li>
-                        <li><a href="./blog.html">Blog</a></li>
-                        <li><a href="./contact.html">Contact</a></li>
+                        <li><a th:href="@{/}">Blog</a></li>
+                        <li><a th:href="@{/}">Contact</a></li>
                     </ul>
                 </nav>
             </div>
             <div class="col-lg-3">
                 <div class="header__right">
                     <div class="header__right__auth">
-                        <a href="#">Login</a>
-                        <a href="#">Register</a>
+                        <span sec:authorize="isAuthenticated()">
+                            <a th:href="@{/orders/my}" sec:authentication="name">Account</a>
+                            <form th:action="@{/logout}" method="post" style="display:inline">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" style="background:none;border:none;cursor:pointer;color:inherit">Logout</button>
+                            </form>
+                        </span>
+                        <span sec:authorize="!isAuthenticated()">
+                            <a th:href="@{/login}">Login</a>
+                            <a th:href="@{/register}">Register</a>
+                        </span>
                     </div>
                     <ul class="header__right__widget">
                         <li><span class="icon_search search-switch"></span></li>
-                        <li><a href="#"><span class="icon_heart_alt"></span>
-                            <div class="tip">2</div>
-                        </a></li>
-                        <li><a href="#"><span class="icon_bag_alt"></span>
-                            <div class="tip">2</div>
-                        </a></li>
+                        <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                        <li><a th:href="@{/basket}"><span class="icon_bag_alt"></span></a></li>
                     </ul>
                 </div>
             </div>

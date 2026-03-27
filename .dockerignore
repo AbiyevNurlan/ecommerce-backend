@@ -1,0 +1,46 @@
+# ── Build artifacts ──
+target/
+surefire-reports/
+
+# ── Version control ──
+.git/
+.github/
+
+# ── Documentation ──
+*.md
+
+# ── Environment / secrets — image-ə girməsin! ──
+.env
+.env.*
+
+# ── Uploads — runtime-da mount ediləcək ──
+uploads/
+
+# ── IDE ──
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.classpath
+*.project
+.settings/
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+
+# ── Docker (öz-özünü daxil etməsin) ──
+.dockerignore
+.gitignore
+docker-compose.yml
+docker-compose.override.yml
+
+# ── Logs ──
+*.log
+logs/
+
+# ── Sensitive config ──
+src/main/resources/application.properties
+src/main/resources/application-prod.properties
+src/main/resources/application-local.properties

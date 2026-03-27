@@ -18,4 +18,5 @@ public interface ColorService {
 
     Color getColorById(Long colorId);
 
+    boolean deleteColor(Long id);
 }

@@ -45,7 +45,7 @@ public class BasketController {
         return "redirect:/basket";
     }
 
-    @GetMapping("/remove/{productId}")
+    @PostMapping("/remove/{productId}")
     @PreAuthorize("isAuthenticated()")
     public String remove(@PathVariable Long productId, Principal principal) {
         String email = principal.getName();

@@ -10,6 +10,7 @@ import az.edu.itbrains.ecommerce.services.ProductService;
 import az.edu.itbrains.ecommerce.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,31 +22,31 @@ public class BasketServiceImpl implements BasketService {
 
 
     @Override
+    @Transactional
     public void addToCart(String email, BasketAddDto basketAddDto) {
+        int qty = Math.max(basketAddDto.getQuantity(), 1);
         User user = userService.getByEmail(email);
         Product product = productService.getProductById(basketAddDto.getProductId());
         Basket findBasket = basketRepository.findByUserIdAndProductId(user.getId(), product.getId());
-        if(findBasket != null){
-          findBasket.setQuantity(findBasket.getQuantity() + 1);
-          basketRepository.save(findBasket);
-        }else {
+        if (findBasket != null) {
+            findBasket.setQuantity(findBasket.getQuantity() + qty);
+            basketRepository.save(findBasket);
+        } else {
             Basket basket = new Basket();
             basket.setUser(user);
             basket.setProduct(product);
-            basket.setQuantity(1);
-
+            basket.setQuantity(qty);
             basketRepository.save(basket);
         }
-
-
     }
 
     @Override
+    @Transactional
     public boolean removeFromBasket(String email, Long productId) {
         User user = userService.getByEmail(email);
         Product product = productService.getProductById(productId);
         Basket findBasket = basketRepository.findByUserIdAndProductId(user.getId(), product.getId());
-        if(findBasket != null){
+        if (findBasket != null) {
             basketRepository.delete(findBasket);
             return true;
         }

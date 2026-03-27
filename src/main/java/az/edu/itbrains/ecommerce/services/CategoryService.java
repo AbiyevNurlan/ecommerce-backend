@@ -18,4 +18,6 @@ public interface CategoryService {
     boolean updateCategory(Long id, CategoryUpdateDto categoryUpdateDto);
 
     Category getCategoryById(Long categoryId);
+
+    boolean deleteCategory(Long id);
 }

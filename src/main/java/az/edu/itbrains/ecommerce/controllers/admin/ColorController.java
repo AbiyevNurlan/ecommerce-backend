@@ -58,8 +58,17 @@ public class ColorController {
 
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id){
+    public String deleteConfirm(@PathVariable Long id, Model model) {
+        ColorUpdateDto colorUpdateDto = colorService.findUpdatedColor(id);
+        model.addAttribute("color", colorUpdateDto);
+        model.addAttribute("colorId", id);
         return "admin/color/delete.html";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        colorService.deleteColor(id);
+        return "redirect:/dashboard/color";
     }
 
 }

@@ -1,46 +1,97 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:layout="http://www.w3.org/1999/xhtml"
-                layout:decorate="~{admin/layout}">
+      layout:decorate="~{admin/layout}" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>SB Admin 2 - Blank</title>
-
+    <title>Update Product</title>
 </head>
 
 <body id="page-top">
-
-<!-- Page Wrapper -->
 <div id="wrapper">
-
-
-    <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
+        <div layout:fragment="content" class="container-fluid">
+            <div class="card shadow">
+                <div class="card-header bg-warning">
+                    <h4 th:text="'Update Product: ' + ${product.name}">Update Product</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/dashboard/product/update/{id}(id=${product.id})}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" name="name" th:value="${product.name}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Barcode</label>
+                                <input type="text" class="form-control" name="barcode" th:value="${product.barcode}">
+                            </div>
+                        </div>
 
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Price</label>
+                                <input type="number" class="form-control" name="price" step="0.01" th:value="${product.price}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Discount (%)</label>
+                                <input type="number" class="form-control" name="discount" step="0.01" th:value="${product.discount}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Category</label>
+                                <select class="form-select form-control" name="categoryId">
+                                    <option selected disabled>Choose category</option>
+                                    <option th:each="category : ${categories}"
+                                            th:value="${category.id}"
+                                            th:text="${category.name}"
+                                            th:selected="${product.category != null and product.category.id == category.id}">Category</option>
+                                </select>
+                            </div>
+                        </div>
 
-            <!-- Begin Page Content -->
-            <div layout:fragment="content" class="container-fluid">
+                        <div class="mb-3">
+                            <label class="form-label">Short Description</label>
+                            <textarea class="form-control" name="shortDescription" rows="2" th:text="${product.shortDescription}"></textarea>
+                        </div>
 
+                        <div class="mb-3">
+                            <label class="form-label">Full Description</label>
+                            <textarea class="form-control" name="description" rows="4" th:text="${product.description}"></textarea>
+                        </div>
 
+                        <div class="mb-3">
+                            <label class="form-label">Specification</label>
+                            <textarea class="form-control" name="specification" rows="3" th:text="${product.specification}"></textarea>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="featured" id="featuredCheck" th:checked="${product.featured}">
+                                    <label class="form-check-label" for="featuredCheck">Featured</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="hotTrending" id="hotTrendingCheck" th:checked="${product.hotTrending}">
+                                    <label class="form-check-label" for="hotTrendingCheck">Hot Trending</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-end">
+                            <a th:href="@{/dashboard/product}" class="btn btn-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-warning px-4">Update</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <!-- /.container-fluid -->
-
-
-
-
+        </div>
     </div>
-    <!-- End of Content Wrapper -->
-
 </div>
-<!-- End of Page Wrapper -->
-
 </body>
-
 </html>

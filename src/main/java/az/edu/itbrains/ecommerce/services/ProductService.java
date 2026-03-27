@@ -22,4 +22,8 @@ public interface ProductService {
     List<ProductBestSellerDto> getBestSellerProducts();
 
     Product getProductById(Long productId);
+
+    boolean deleteProduct(Long id);
+
+    void updateProduct(Long id, ProductUpdateDto productUpdateDto);
 }

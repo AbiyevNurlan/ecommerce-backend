@@ -47,7 +47,7 @@
                     <td th:text="${product.category.name}">Mark</td>
                     <td>
                         <a th:href="'/dashboard/product/update/'+${product.id}">Edit</a>
-                        <a href="">Delete</a>
+                        <a th:href="'/dashboard/product/delete/'+${product.id}">Delete</a>
                     </td>
                 </tr>
 

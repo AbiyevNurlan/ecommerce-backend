@@ -17,4 +17,6 @@ public interface SizeService {
     boolean updateSize(Long id, SizeUpdateDto sizeUpdateDto);
 
     Size getSizeById(Long sizeId);
+
+    boolean deleteSize(Long id);
 }

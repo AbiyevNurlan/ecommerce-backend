@@ -23,9 +23,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumb__links">
-                        <a href="./index.html"><i class="fa fa-home"></i> Home</a>
-                        <a href="#">Women’s </a>
-                        <span>Essential structured blazer</span>
+                        <a th:href="@{/}"><i class="fa fa-home"></i> Home</a>
+                        <a th:href="@{/shop}">Shop</a>
+                        <span th:text="${product.name}">Product</span>
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="product__details__text">
-                        <h3>Essential structured blazer <span>Brand: SKMEIMore Men Watches from SKMEI</span></h3>
+                        <h3 th:text="${product.name}">Essential structured blazer</h3>
                         <div class="rating">
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
@@ -64,17 +64,22 @@
                             <i class="fa fa-star"></i>
                             <span>( 138 reviews )</span>
                         </div>
-                        <div th:text="${product.price}" class="product__details__price">$ 75.0 <span>$ 83.0</span></div>
+                        <div th:text="${product.price} + ' ₼'" class="product__details__price">$ 75.0</div>
                         <p th:text="${product.shortDescription}">Nemo enim ipsam voluptatem quia aspernatur aut odit aut loret fugit, sed quia consequuntur
                             magni lores eos qui ratione voluptatem sequi nesciunt.</p>
                         <div class="product__details__button">
                             <div class="quantity">
                                 <span>Quantity:</span>
                                 <div class="pro-qty">
-                                    <input type="text" value="1">
+                                    <input type="text" id="qty-input" value="1">
                                 </div>
                             </div>
-                            <a href="#" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</a>
+                            <form method="post" th:action="@{/basket/addToCart}" style="display:inline">
+                                <input type="hidden" name="productId" th:value="${product.id}">
+                                <input type="hidden" name="quantity" value="1">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</button>
+                            </form>
                             <ul>
                                 <li><a href="#"><span class="icon_heart_alt"></span></a></li>
                                 <li><a href="#"><span class="icon_adjust-horiz"></span></a></li>

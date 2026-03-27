@@ -31,7 +31,7 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form th:object="${registerDto}" method="post" class="user">
+                            <form th:object="${registerDto}" th:action="@{/register}" method="post" class="user">
                                 <div th:if="${#fields.hasAnyErrors()}">
                                     <ul>
                                         <li th:each="err : ${#fields.allErrors()}" th:text="${err}" />
