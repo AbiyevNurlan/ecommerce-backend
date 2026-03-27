@@ -1,6 +1,7 @@
 package az.edu.itbrains.ecommerce.controllers;
 
 import az.edu.itbrains.ecommerce.dtos.category.CategoryDto;
+import az.edu.itbrains.ecommerce.dtos.product.ProductBestSellerDto;
 import az.edu.itbrains.ecommerce.dtos.product.ProductFeaturedDto;
 import az.edu.itbrains.ecommerce.dtos.product.ProductHomeDto;
 import az.edu.itbrains.ecommerce.dtos.product.ProductHotTrendDto;
@@ -18,7 +19,6 @@ public class HomeController {
     private final ProductService productService;
     private final CategoryService categoryService;
 
-
     public HomeController(ProductService productService, CategoryService categoryService) {
         this.productService = productService;
         this.categoryService = categoryService;
@@ -30,11 +30,14 @@ public class HomeController {
         List<CategoryDto> categoryDtoList = categoryService.getAllCategories();
         List<ProductFeaturedDto> productFeaturedDtoList = productService.getFeaturedProducts();
         List<ProductHotTrendDto> productHotTrendDtoList = productService.getHotTrendProducts();
+        // Best sellers computed from real order data (top 4 by total quantity sold)
+        List<ProductBestSellerDto> bestSellers = productService.getBestSellerProducts();
 
         model.addAttribute("products", products);
         model.addAttribute("categories", categoryDtoList);
         model.addAttribute("featuredProducts", productFeaturedDtoList);
         model.addAttribute("hotTrendProducts", productHotTrendDtoList);
+        model.addAttribute("bestSellers", bestSellers);
 
         return "index";
     }

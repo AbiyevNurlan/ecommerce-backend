@@ -4,7 +4,9 @@
 -- ============================================================
 
 -- ── ROLE_SELLER ───────────────────────────────────────────────────────────
-INSERT INTO role (name) VALUES ('ROLE_SELLER') ON CONFLICT (name) DO NOTHING;
+INSERT INTO role (name)
+SELECT 'ROLE_SELLER'
+WHERE NOT EXISTS (SELECT 1 FROM role WHERE name = 'ROLE_SELLER');
 
 -- ── sellers ───────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS sellers (

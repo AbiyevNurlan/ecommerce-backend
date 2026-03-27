@@ -14,6 +14,7 @@ import az.edu.itbrains.ecommerce.repositories.SellerRepository;
 import az.edu.itbrains.ecommerce.services.CategoryService;
 import az.edu.itbrains.ecommerce.services.ColorSizeService;
 import az.edu.itbrains.ecommerce.services.ProductService;
+import az.edu.itbrains.ecommerce.services.RecommendationService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,6 +39,7 @@ public class ProductServiceImpl implements ProductService {
     private final ColorSizeService colorSizeService;
     private final OrderItemRepository orderItemRepository;
     private final SellerRepository sellerRepository;
+    private final RecommendationService recommendationService;
 
     @Override
     @Transactional(readOnly = true)
@@ -265,5 +268,42 @@ public class ProductServiceImpl implements ProductService {
         // Satıcı featured/hotTrending-i birbaşa dəyişə bilməz — yalnız promosyon ilə
         productRepository.save(product);
         log.info("Seller product #{} updated by {}", productId, sellerEmail);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductDashboardDto> searchProducts(String query) {
+        List<Product> raw = productRepository.searchProducts(query);
+        // Relevance sort: name match first, then category, then description
+        String lower = query.toLowerCase();
+        List<Product> sorted = new ArrayList<>(raw);
+        sorted.sort((a, b) -> Integer.compare(relevanceScore(a, lower), relevanceScore(b, lower)));
+        return sorted.stream()
+                .map(product -> {
+                    ProductDashboardDto dto = modelMapper.map(product, ProductDashboardDto.class);
+                    dto.setImage(getSelectedPhotoUrl(product));
+                    return dto;
+                })
+                .toList();
+    }
+
+    private int relevanceScore(Product p, String lowerQuery) {
+        if (p.getName() != null && p.getName().toLowerCase().contains(lowerQuery)) return 0;
+        if (p.getCategory() != null && p.getCategory().getName() != null
+                && p.getCategory().getName().toLowerCase().contains(lowerQuery)) return 1;
+        return 2;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductFeaturedDto> getRecommendations(Long productId) {
+        return recommendationService.getFrequentlyBoughtTogether(productId)
+                .stream()
+                .map(product -> {
+                    ProductFeaturedDto dto = modelMapper.map(product, ProductFeaturedDto.class);
+                    dto.setImage(getSelectedPhotoUrl(product));
+                    return dto;
+                })
+                .toList();
     }
 }

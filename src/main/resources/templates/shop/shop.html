@@ -40,6 +40,33 @@
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="shop__sidebar">
+                        <!-- Search Box -->
+                        <div class="sidebar__filter" style="margin-bottom:20px">
+                            <div class="section-title">
+                                <h4>Search Products</h4>
+                            </div>
+                            <form method="get" th:action="@{/shop}" style="display:flex;gap:6px">
+                                <input type="text" name="q" th:value="${query}"
+                                       placeholder="Product name, category..."
+                                       style="flex:1;border:1px solid #e1e1e1;padding:8px 12px;font-size:13px;outline:none"/>
+                                <button type="submit"
+                                        style="background:#0d6efd;color:#fff;border:none;padding:8px 14px;cursor:pointer;font-size:13px">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </form>
+                            <div th:if="${query != null and !query.isEmpty()}" style="margin-top:8px;font-size:13px;color:#555">
+                                <span th:if="${#lists.size(products) > 0}">
+                                    <strong th:text="${#lists.size(products)}">0</strong> result(s) for
+                                    &ldquo;<em th:text="${query}"></em>&rdquo;
+                                    &nbsp;<a th:href="@{/shop}" style="color:#999;font-size:12px">Clear</a>
+                                </span>
+                                <span th:if="${#lists.size(products) == 0}" style="color:#c0392b">
+                                    No results for &ldquo;<em th:text="${query}"></em>&rdquo;.
+                                    <a th:href="@{/shop}">Clear</a>
+                                </span>
+                            </div>
+                        </div>
+
                         <div class="sidebar__categories">
                             <div class="section-title">
                                 <h4>Categories</h4>

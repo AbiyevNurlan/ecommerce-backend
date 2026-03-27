@@ -11,6 +11,18 @@ public interface ProductService {
 
     ProductDetailDto getProductDetail(Long id);
 
+    /**
+     * Full-text search across product name, description, and category.
+     * Results are sorted by relevance: name match > category match > description match.
+     */
+    List<ProductDashboardDto> searchProducts(String query);
+
+    /**
+     * Collaborative filtering recommendations for the given product.
+     * Returns up to 4 products ranked by co-purchase frequency.
+     */
+    List<ProductFeaturedDto> getRecommendations(Long productId);
+
     void createProduct(ProductCreateDto productCreateDto);
 
     /** Satıcının öz məhsulları (email-dən seller tapılır) */
