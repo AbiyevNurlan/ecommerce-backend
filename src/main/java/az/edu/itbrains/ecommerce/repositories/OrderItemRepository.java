@@ -6,10 +6,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     @Query("SELECT oi.product FROM OrderItem oi GROUP BY oi.product ORDER BY SUM(oi.quantity) DESC")
     List<Product> findBestSellerProducts(Pageable pageable);
+
+    @Query("SELECT COUNT(DISTINCT oi.order.id) FROM OrderItem oi WHERE oi.product.id IN :productIds")
+    long countDistinctOrdersBySellerProducts(List<Long> productIds);
+
+    @Query("SELECT COALESCE(SUM(oi.price * oi.quantity), 0) FROM OrderItem oi WHERE oi.product.id IN :productIds")
+    BigDecimal sumRevenueByProductIds(List<Long> productIds);
 }
+

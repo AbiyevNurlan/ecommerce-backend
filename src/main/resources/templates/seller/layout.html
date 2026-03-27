@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Satıcı Paneli</title>
+
+    <link href="/dashboard/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800" rel="stylesheet">
+    <link href="/dashboard/css/sb-admin-2.min.css" rel="stylesheet">
+    <style>
+        .sidebar-brand-text { font-size: 1rem; }
+        .balance-badge { background: #1cc88a; color: #fff; padding: 3px 10px; border-radius: 20px; font-weight: 700; }
+    </style>
+</head>
+
+<body id="page-top">
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
+
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/seller/dashboard">
+            <div class="sidebar-brand-icon">
+                <i class="fas fa-store"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">Satıcı Paneli</div>
+        </a>
+
+        <hr class="sidebar-divider my-0">
+
+        <li class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/seller/dashboard'} ? 'active' : ''">
+            <a class="nav-link" href="/seller/dashboard">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>İdarə Paneli</span>
+            </a>
+        </li>
+
+        <hr class="sidebar-divider">
+
+        <li class="nav-item" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/seller/products')} ? 'active' : ''">
+            <a class="nav-link" href="/seller/products">
+                <i class="fas fa-fw fa-box"></i>
+                <span>Məhsullarım</span>
+            </a>
+        </li>
+
+        <hr class="sidebar-divider">
+
+        <li class="nav-item" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/seller/promotions')} ? 'active' : ''">
+            <a class="nav-link" href="/seller/promotions">
+                <i class="fas fa-fw fa-bullhorn"></i>
+                <span>Promosyonlar</span>
+            </a>
+        </li>
+
+        <hr class="sidebar-divider">
+
+        <li class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/seller/balance'} ? 'active' : ''">
+            <a class="nav-link" href="/seller/balance">
+                <i class="fas fa-fw fa-wallet"></i>
+                <span>Balans &amp; Əməliyyatlar</span>
+            </a>
+        </li>
+
+        <hr class="sidebar-divider">
+
+        <li class="nav-item">
+            <a class="nav-link" href="/">
+                <i class="fas fa-fw fa-home"></i>
+                <span>Sayta Qayıt</span>
+            </a>
+        </li>
+
+        <hr class="sidebar-divider d-none d-md-block">
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+    </ul>
+    <!-- End Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" sec:authentication="name">İstifadəçi</span>
+                            <i class="fas fa-user-circle fa-fw fa-lg text-gray-600"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="/seller/dashboard">
+                                <i class="fas fa-store fa-sm fa-fw mr-2 text-gray-400"></i> Mağaza Paneliim
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <form th:action="@{/logout}" method="post">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2"></i> Çıxış
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <!-- End Topbar -->
+
+            <!-- Flash messages -->
+            <div class="container-fluid px-4">
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span th:text="${success}"></span>
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                </div>
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span th:text="${error}"></span>
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                </div>
+            </div>
+
+            <!-- Page Content -->
+            <div layout:fragment="content" class="container-fluid px-4">
+            </div>
+
+        </div>
+        <!-- End Main Content -->
+
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; DMA3 Ecommerce</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <!-- End Content Wrapper -->
+</div>
+<!-- End Wrapper -->
+
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<script src="/dashboard/vendor/jquery/jquery.min.js"></script>
+<script src="/dashboard/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/dashboard/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/dashboard/js/sb-admin-2.min.js"></script>
+</body>
+</html>

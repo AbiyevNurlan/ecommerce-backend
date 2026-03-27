@@ -1,13 +1,16 @@
 package az.edu.itbrains.ecommerce.services.impls;
 
+import az.edu.itbrains.ecommerce.enums.ProductStatus;
 import az.edu.itbrains.ecommerce.dtos.product.*;
 import az.edu.itbrains.ecommerce.exceptions.ResourceNotFoundException;
 import az.edu.itbrains.ecommerce.exceptions.ServiceException;
 import az.edu.itbrains.ecommerce.models.Category;
 import az.edu.itbrains.ecommerce.models.Photo;
 import az.edu.itbrains.ecommerce.models.Product;
+import az.edu.itbrains.ecommerce.models.Seller;
 import az.edu.itbrains.ecommerce.repositories.OrderItemRepository;
 import az.edu.itbrains.ecommerce.repositories.ProductRepository;
+import az.edu.itbrains.ecommerce.repositories.SellerRepository;
 import az.edu.itbrains.ecommerce.services.CategoryService;
 import az.edu.itbrains.ecommerce.services.ColorSizeService;
 import az.edu.itbrains.ecommerce.services.ProductService;
@@ -33,6 +36,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryService categoryService;
     private final ColorSizeService colorSizeService;
     private final OrderItemRepository orderItemRepository;
+    private final SellerRepository sellerRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -181,5 +185,85 @@ public class ProductServiceImpl implements ProductService {
         }
         productRepository.save(product);
         log.info("Product #{} updated", id);
+    }
+
+    @Override
+    @Transactional
+    public void createProductForSeller(String sellerEmail, ProductCreateDto dto) {
+        Seller seller = sellerRepository.findByUserEmail(sellerEmail)
+                .orElseThrow(() -> new ServiceException("Satıcı profili tapılmadı"));
+        if (!seller.isApproved()) {
+            throw new ServiceException("Hesabınız hələ təsdiqlənməmişdir");
+        }
+        Product product = new Product();
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setShortDescription(dto.getShortDescription());
+        product.setSpecification("");
+        product.setPrice(dto.getPrice());
+        product.setDiscount(dto.getDiscount());
+        product.setBarcode(dto.getBarcode());
+        product.setProductStatus(ProductStatus.PENDING_REVIEW);
+        product.setSeller(seller);
+        Category category = categoryService.getCategoryById(dto.getCategoryId());
+        product.setCategory(category);
+        productRepository.save(product);
+        colorSizeService.createColorSize(dto.getColorSizes(), product);
+        log.info("Seller product created — seller={}, product={}", sellerEmail, product.getName());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductDashboardDto> getSellerProducts(String sellerEmail) {
+        Seller seller = sellerRepository.findByUserEmail(sellerEmail)
+                .orElseThrow(() -> new ServiceException("Satıcı profili tapılmadı"));
+        return productRepository.findBySellerIdOrderByIdDesc(seller.getId())
+                .stream()
+                .map(product -> {
+                    ProductDashboardDto dashDto = modelMapper.map(product, ProductDashboardDto.class);
+                    dashDto.setImage(getSelectedPhotoUrl(product));
+                    return dashDto;
+                })
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteSellerProduct(String sellerEmail, Long productId) {
+        Objects.requireNonNull(productId);
+        Seller seller = sellerRepository.findByUserEmail(sellerEmail)
+                .orElseThrow(() -> new ServiceException("Satıcı profili tapılmadı"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException(productId, "Product"));
+        if (product.getSeller() == null || !product.getSeller().getId().equals(seller.getId())) {
+            throw new ServiceException("Bu məhsul sizə aid deyil");
+        }
+        productRepository.deleteById(productId);
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public void updateSellerProduct(String sellerEmail, Long productId, ProductUpdateDto dto) {
+        Objects.requireNonNull(productId);
+        Seller seller = sellerRepository.findByUserEmail(sellerEmail)
+                .orElseThrow(() -> new ServiceException("Satıcı profili tapılmadı"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException(productId, "Product"));
+        if (product.getSeller() == null || !product.getSeller().getId().equals(seller.getId())) {
+            throw new ServiceException("Bu məhsul sizə aid deyil");
+        }
+        if (dto.getName() != null && !dto.getName().isBlank()) product.setName(dto.getName());
+        if (dto.getDescription() != null) product.setDescription(dto.getDescription());
+        if (dto.getShortDescription() != null) product.setShortDescription(dto.getShortDescription());
+        product.setPrice(dto.getPrice());
+        product.setDiscount(dto.getDiscount());
+        if (dto.getBarcode() != null && !dto.getBarcode().isBlank()) product.setBarcode(dto.getBarcode());
+        if (dto.getCategoryId() != null) {
+            product.setCategory(categoryService.getCategoryById(dto.getCategoryId()));
+        }
+        // Satıcı featured/hotTrending-i birbaşa dəyişə bilməz — yalnız promosyon ilə
+        productRepository.save(product);
+        log.info("Seller product #{} updated by {}", productId, sellerEmail);
     }
 }

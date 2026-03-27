@@ -39,6 +39,8 @@ public class SecurityConfig {
                 .requestMatchers("/actuator/**").hasRole("ADMIN")
                 // Only users with ROLE_ADMIN can access the admin dashboard
                 .requestMatchers("/dashboard/**").hasRole("ADMIN")
+                // Only approved sellers can access the seller dashboard
+                .requestMatchers("/seller/dashboard", "/seller/products/**", "/seller/promotions/**", "/seller/balance").hasRole("SELLER")
                 .anyRequest().permitAll()
             )
             .formLogin(form -> form
@@ -46,7 +48,10 @@ public class SecurityConfig {
                 .successHandler((request, response, authentication) -> {
                     boolean isAdmin = authentication.getAuthorities().stream()
                             .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-                    response.sendRedirect(request.getContextPath() + (isAdmin ? "/dashboard" : "/"));
+                    boolean isSeller = authentication.getAuthorities().stream()
+                            .anyMatch(a -> a.getAuthority().equals("ROLE_SELLER"));
+                    String redirect = isAdmin ? "/dashboard" : (isSeller ? "/seller/dashboard" : "/");
+                    response.sendRedirect(request.getContextPath() + redirect);
                 })
                 .failureUrl("/login?error=true")
                 .permitAll()

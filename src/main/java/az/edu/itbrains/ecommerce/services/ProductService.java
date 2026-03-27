@@ -13,7 +13,13 @@ public interface ProductService {
 
     void createProduct(ProductCreateDto productCreateDto);
 
+    /** Satıcının öz məhsulları (email-dən seller tapılır) */
+    void createProductForSeller(String sellerEmail, ProductCreateDto dto);
+
     List<ProductDashboardDto> getDashboardProducts();
+
+    /** Satıcının öz məhsullarının siyahısı */
+    List<ProductDashboardDto> getSellerProducts(String sellerEmail);
 
     List<ProductFeaturedDto> getFeaturedProducts();
 
@@ -25,5 +31,12 @@ public interface ProductService {
 
     boolean deleteProduct(Long id);
 
+    /** Satıcı yalnız öz məhsulunu silə bilər */
+    boolean deleteSellerProduct(String sellerEmail, Long productId);
+
     void updateProduct(Long id, ProductUpdateDto productUpdateDto);
+
+    /** Satıcı yalnız öz məhsulunu yeniləyə bilər */
+    void updateSellerProduct(String sellerEmail, Long productId, ProductUpdateDto dto);
 }
+

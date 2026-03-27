@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{admin/layout}">
+<head><title>Satıcılar</title></head>
+<body>
+<div layout:fragment="content">
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Satıcı Müraciətləri</h1>
+        <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#creditModal">
+            <i class="fas fa-wallet mr-1"></i> Balans Əlavə Et
+        </button>
+    </div>
+
+    <!-- Success / Error alerts -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${success}"></span>
+        <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${error}"></span>
+        <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+    </div>
+
+    <!-- Sellers Table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Bütün Satıcılar</h6>
+            <span class="badge badge-primary" th:text="${#lists.size(sellers)} + ' satıcı'"></span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover dataTable">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>#</th>
+                        <th>İstifadəçi</th>
+                        <th>Mağaza Adı</th>
+                        <th>Balans</th>
+                        <th>Komissiya</th>
+                        <th>Status</th>
+                        <th>Müraciət Tarixi</th>
+                        <th>Əməliyyatlar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(sellers)}">
+                        <td colspan="8" class="text-center text-muted py-4">Hələ heç bir satıcı müraciəti yoxdur.</td>
+                    </tr>
+                    <tr th:each="s, iter : ${sellers}">
+                        <td th:text="${iter.index + 1}"></td>
+                        <td>
+                            <div th:text="${s.userName}"></div>
+                            <small class="text-muted" th:text="${s.userEmail}"></small>
+                        </td>
+                        <td>
+                            <strong th:text="${s.shopName}"></strong>
+                            <div class="small text-muted" style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"
+                                 th:text="${s.shopDescription}"></div>
+                        </td>
+                        <td th:text="${#numbers.formatDecimal(s.balance, 1, 2) + ' ₼'}"></td>
+                        <td th:text="${s.commissionRate + '%'}"></td>
+                        <td>
+                            <span th:if="${s.approved}" class="badge badge-success px-2 py-1">
+                                <i class="fas fa-check mr-1"></i>Təsdiqlənib
+                            </span>
+                            <span th:unless="${s.approved}" class="badge badge-warning px-2 py-1">
+                                <i class="fas fa-clock mr-1"></i>Gözlənilir
+                            </span>
+                        </td>
+                        <td th:text="${#temporals.format(s.createdAt, 'dd.MM.yyyy')}"></td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <form th:unless="${s.approved}"
+                                      th:action="@{/dashboard/sellers/approve/{id}(id=${s.id})}" method="post"
+                                      class="d-inline">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                    <button type="submit" class="btn btn-success btn-sm"
+                                            title="Təsdiqlə">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </form>
+                                <form th:if="${s.approved}"
+                                      th:action="@{/dashboard/sellers/reject/{id}(id=${s.id})}" method="post"
+                                      class="d-inline"
+                                      onsubmit="return confirm('Satıcını rədd etmək istədiyinizə əminsiniz?')">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                            title="Rədd Et">
+                                        <i class="fas fa-ban"></i>
+                                    </button>
+                                </form>
+                                <!-- Quick credit button -->
+                                <button type="button" class="btn btn-primary btn-sm"
+                                        th:attr="data-seller-id=${s.id}, data-seller-name=${s.shopName}"
+                                        onclick="setCredit(this)"
+                                        title="Balans Əlavə Et">
+                                    <i class="fas fa-plus-circle"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Credit Balance Modal -->
+    <div class="modal fade" id="creditModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="fas fa-wallet mr-2"></i>Balans Əlavə Et</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <form th:action="@{/dashboard/sellers/credit}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Satıcı <span class="text-danger">*</span></label>
+                            <select class="form-control" name="sellerId" id="creditSellerSelect">
+                                <option value="">Seçin...</option>
+                                <option th:each="s : ${sellers}" th:value="${s.id}" th:text="${s.shopName + ' – ' + s.userEmail}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Məbləğ (₼) <span class="text-danger">*</span></label>
+                            <input type="number" step="0.01" min="1" class="form-control"
+                                   name="amount" placeholder="10.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Açıqlama</label>
+                            <input type="text" class="form-control" name="description"
+                                   placeholder="Ödəniş referansı...">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Bağla</button>
+                        <button type="submit" class="btn btn-success font-weight-bold">
+                            <i class="fas fa-check mr-1"></i> Əlavə Et
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setCredit(btn) {
+            var sellerId = btn.getAttribute('data-seller-id');
+            var sellerName = btn.getAttribute('data-seller-name');
+            document.getElementById('creditSellerSelect').value = sellerId;
+            var modal = new bootstrap.Modal(document.getElementById('creditModal'));
+            modal.show();
+        }
+    </script>
+
+</div>
+</body>
+</html>

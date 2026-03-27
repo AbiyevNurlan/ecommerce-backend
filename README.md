@@ -29,7 +29,7 @@ Spring Boot 3.5 + Java 21 əsaslı tam funksional e-ticarət platforması. Məhs
 | **Backend** | Java 21, Spring Boot 3.5.7, Spring MVC, Spring Data JPA (Hibernate) |
 | **Frontend** | Thymeleaf 3 + Layout Dialect, Bootstrap 4, jQuery |
 | **Database** | PostgreSQL 16, Flyway (versiyalanmış migration) |
-| **Security** | Spring Security 6, BCrypt, CSRF qoruması, Role-based access (ADMIN / USER) |
+| **Security** | Spring Security 6, BCrypt, CSRF qoruması, Role-based access (ADMIN / USER / SELLER) |
 | **Messaging** | Spring AMQP (RabbitMQ) |
 | **Testing** | JUnit 5, Mockito, MockMvc, H2 (in-memory, integration tests üçün) |
 | **Logging** | Logback (logback-spring.xml), SLF4J |
@@ -60,21 +60,29 @@ src/main/java/az/edu/itbrains/ecommerce/
 │   ├── BasketController   # /basket/add, /basket/remove/{id}
 │   ├── CartController     # /cart, /cart/checkout, /cart/order
 │   ├── OrderController    # /orders/my-orders
-│   └── admin/            # Admin panel controller-ləri (/dashboard/**)
+│   ├── seller/            # Satıcı panel controller-ləri (/seller/**)
+│   │   └── SellerController
+│   └── admin/             # Admin panel controller-ləri (/dashboard/**)
 │       ├── DashboardController
 │       ├── CategoryController
 │       ├── ProductController
 │       ├── ColorController
 │       ├── SizeController
-│       └── AdminOrderController
-├── dtos/                 # Data Transfer Objects (request/response)
-├── enums/                # OrderStatus enum
+│       ├── AdminOrderController
+│       └── AdminSellerController
+├── dtos/                 # Data Transfer Objects
+│   ├── product/          # ProductCreateDto, ProductUpdateDto, ProductDto
+│   └── seller/           # SellerApplyDto, SellerDashboardDto, SellerAdminDto,
+│                         # PromotionCreateDto, PromotionDto, SellerTransactionDto, BalanceCreditDto
+├── enums/                # OrderStatus, PromotionType, PromotionStatus, ProductStatus, TransactionType
 ├── exceptions/           # GlobalExceptionHandler, ResourceNotFoundException, ServiceException
-├── helpers/              # DataSeeder (ilk açılışda demo data)
-├── models/               # JPA Entity-lər (11 entity)
+├── helpers/              # DataSeeder (ilk açılışda demo data), PromotionExpiryScheduler
+├── models/               # JPA Entity-lər (14 entity)
 ├── repositories/         # Spring Data JPA repository interface-ləri
 ├── security/             # SecurityConfig, CustomUserDetailsService
 └── services/             # Business logic (interface + impls/)
+    ├── SellerService
+    ├── PromotionService
     └── impls/
 ```
 
@@ -85,8 +93,8 @@ src/main/java/az/edu/itbrains/ecommerce/
 | Entity | Açıqlama |
 |---|---|
 | `User` | İstifadəçi — ad, soyad, email, şifrə (BCrypt), rollar |
-| `Role` | ROLE_ADMIN / ROLE_USER |
-| `Product` | Məhsul — ad, qiymət, endirim, barkod, kateqoriya, şəkillər |
+| `Role` | `ROLE_ADMIN` / `ROLE_USER` / `ROLE_SELLER` |
+| `Product` | Məhsul — ad, qiymət, endirim, barkod, kateqoriya, şəkillər, `seller`, `productStatus` |
 | `Category` | Kateqoriya — ad, SEO URL |
 | `Color` | Rəng |
 | `Size` | Ölçü |
@@ -95,8 +103,17 @@ src/main/java/az/edu/itbrains/ecommerce/
 | `Basket` | Səbət sətiri — istifadəçi, məhsul, miqdar |
 | `Order` | Sifariş — ünvan, status, sifariş elementləri |
 | `OrderItem` | Sifariş sətiri — məhsul, miqdar, qiymət |
+| `Seller` | Satıcı profili — mağaza adı, balans, komissiya dərəcəsi, təsdiq statusu |
+| `Promotion` | Məhsul promosyonu — növ, müddət, ödənilən məbləğ, status |
+| `SellerTransaction` | Satıcı balans əməliyyatları — kredit, promo debet, komissiya debet |
 
 **Sifariş statusları:** `PENDING → CONFIRMED → SHIPPED → DELIVERED → CANCELLED`
+
+**Məhsul statusları:** `DRAFT → PENDING_REVIEW → ACTIVE / REJECTED / SUSPENDED`
+
+**Promosyon növləri:** `FEATURED` (Ana səhifə), `SPONSORED` (Kateqoriya başı), `HOT_TRENDING` (Trend bölməsi)
+
+**Promosyon statusları:** `PENDING → ACTIVE → EXPIRED / CANCELLED`
 
 ---
 
@@ -210,8 +227,19 @@ Tətbiq ilk dəfə başladıqda `DataSeeder` avtomatik olaraq aşağıdakıları
 |---|---|---|---|
 | **ADMIN** | `admin@admin.com` | `Admin@123` | DataSeeder tərəfindən avtomatik |
 | **USER** | — | — | `/register` səhifəsindən qeydiyyat |
+| **SELLER** | — | — | `/register` + `/seller/apply` → Admin təsdiqləyir |
 
 > ⚠️ **İstehsalda** admin şifrəsini mütləq dəyişin!
+
+### Satıcı Olmaq Prosesi
+
+```
+1. /register  →  Adi istifadəçi kimi qeydiyyat (ROLE_USER)
+2. /seller/apply  →  Mağaza adı + açıqlama ilə müraciət
+3. Admin Panel (/dashboard/sellers)  →  Admin müraciəti görür
+4. "Təsdiqlə" düyməsi  →  İstifadəçiyə ROLE_SELLER əlavə olunur
+5. Login yenidən  →  /seller/dashboard-a avtomatik yönləndirilir
+```
 
 ---
 
@@ -247,6 +275,32 @@ Tətbiq ilk dəfə başladıqda `DataSeeder` avtomatik olaraq aşağıdakıları
 | POST | `/cart/order` | Sifariş ver |
 | GET | `/orders/my-orders` | İstifadəçinin sifarişləri |
 
+### Seller Panel (`/seller/**` — SELLER rolu tələb olunur)
+
+| Method | Route | Açıqlama |
+|---|---|---|
+| GET | `/seller/apply` | Satıcı müraciət formu (icazəsiz) |
+| POST | `/seller/apply` | Müraciəti göndər |
+| GET | `/seller/dashboard` | Satıcı idarə paneli — balans, statistika |
+| GET | `/seller/products` | Öz məhsullarım siyahısı |
+| GET | `/seller/products/create` | Yeni məhsul formu |
+| POST | `/seller/products/create` | Məhsul yarat (PENDING_REVIEW statusu ilə) |
+| POST | `/seller/products/delete/{id}` | Öz məhsulunu sil |
+| GET | `/seller/promotions` | Aktiv promosyonlar + qiymət cədvəli |
+| POST | `/seller/promotions/buy` | Promosyon satın al (balansdan düşür) |
+| POST | `/seller/promotions/cancel/{id}` | Aktiv promosyonu ləğv et |
+| GET | `/seller/balance` | Balans + əməliyyat tarixi |
+
+### Promosyon Qiymət Cədvəli
+
+| Növ | 3 Gün | 7 Gün | 30 Gün | Effekt |
+|---|---|---|---|---|
+| **FEATURED** | 10₼ | 20₼ | 60₼ | Ana səhifə "Seçilmiş Məhsullar" bölməsi |
+| **SPONSORED** | 5₼ | 10₼ | 30₼ | Kateqoriya siyahısının yuxarısı |
+| **HOT_TRENDING** | 7₼ | 15₼ | 45₼ | "Trend Məhsullar" bölməsi |
+
+> Promosyon sürəsi bitdikdə `PromotionExpiryScheduler` hər saat avtomatik expire edir.
+
 ### Admin Panel (`/dashboard/**` — ADMIN rolu tələb olunur)
 
 | Method | Route | Açıqlama |
@@ -272,6 +326,10 @@ Tətbiq ilk dəfə başladıqda `DataSeeder` avtomatik olaraq aşağıdakıları
 | POST | `/dashboard/size/delete/{id}` | Ölçüyü sil |
 | GET | `/dashboard/order` | Sifariş siyahısı |
 | POST | `/dashboard/order/status/{id}` | Sifariş statusunu yenilə |
+| GET | `/dashboard/sellers` | Satıcı müraciətlərinin siyahısı |
+| POST | `/dashboard/sellers/approve/{id}` | Satıcını təsdiqlə (ROLE_SELLER əlavə et) |
+| POST | `/dashboard/sellers/reject/{id}` | Satıcını rədd et (ROLE_SELLER sil) |
+| POST | `/dashboard/sellers/credit` | Satıcı balansına pul əlavə et |
 
 ---
 
@@ -343,10 +401,16 @@ Layihə **GitHub Actions** ilə `.github/workflows/ci.yml` pipeline-ına malikdi
 | Sifariş sistemi | Checkout → PENDING; admin statusu dəyişir |
 | İstifadəçi autentifikasiyası | Qeydiyyat, giriş (form login), çıxış |
 | Şifrəni unutdum | Forgot password səhifəsi |
-| Role-based access | ADMIN / USER — method security + Thymeleaf sec: |
-| Admin panel | Dashboard + CRUD (kateqoriya, məhsul, rəng, ölçü, sifariş) |
+| Role-based access | ADMIN / USER / SELLER — method security + Thymeleaf sec: |
+| Admin panel | Dashboard + CRUD (kateqoriya, məhsul, rəng, ölçü, sifariş, satıcılar) |
+| **Multi-vendor Marketplace** | Satıcılar öz məhsullarını əlavə edib sata bilir |
+| **Satıcı Paneli** | Dashboard, məhsullar, promosyonlar, balans + əməliyyat tarixi |
+| **Promosyon Sistemi** | 3 növ × 3 müddət (3/7/30 gün) — balansdan avtomatik düşülür |
+| **Satıcı Müraciəti** | İstifadəçi müraciət edir → Admin təsdiqlər → ROLE_SELLER verilir |
+| **Komissiya Sistemi** | Hər satıcı üçün konfiqurasiya edilə bilən komissiya dərəcəsi |
+| **PromotionExpiryScheduler** | Saatlıq @Scheduled task — müddəti bitmiş promosyonları expire edir |
 | Spring Security | BCrypt, CSRF, session fixation mühafizəsi |
-| Database migration | Flyway V1-V3 migration skriptləri |
+| Database migration | Flyway V1-V4 migration skriptləri |
 | DataSeeder | İlk açılışda admin istifadəçi + demo data |
 | Docker dəstəyi | Multi-stage Dockerfile, non-root user, healthcheck |
 | Docker Compose | App + PostgreSQL 16 birlikdə qalxır |
@@ -388,6 +452,7 @@ categories ──< products
 | `V1__init.sql` | Tam schema — bütün cədvəllər, foreign key-lər, indekslər |
 | `V2__fix_order_status_column_type.sql` | `order_status` sütununun tipi düzəldildi |
 | `V3__fix_demo_product_photo.sql` | Demo məhsul şəkil URL-i düzəldildi |
+| `V4__add_seller_promotion.sql` | `sellers`, `promotions`, `seller_transactions` cədvəlləri; `product.seller_id`, `product.product_status`; `ROLE_SELLER` |
 
 ---
 

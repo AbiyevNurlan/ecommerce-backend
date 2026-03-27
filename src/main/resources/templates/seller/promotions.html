@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{seller/layout}">
+<head><title>Promosyonlar</title></head>
+<body>
+<div layout:fragment="content">
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Promosyonlar</h1>
+        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#buyModal">
+            <i class="fas fa-plus mr-1"></i> Promosyon Satın Al
+        </button>
+    </div>
+
+    <!-- Price Table -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-warning"><i class="fas fa-tags mr-1"></i> Promosyon Qiymətləri</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center mb-0">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>Növ</th>
+                                <th>Açıqlama</th>
+                                <th>3 Gün</th>
+                                <th>7 Gün</th>
+                                <th>30 Gün</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><span class="badge badge-primary px-2 py-1">FEATURED</span></td>
+                                <td class="text-left text-muted small">Məhsulunuz Ana Səhifədə "Seçilmiş Məhsullar" bölməsinin ən üstündə görünür</td>
+                                <td><strong>10₼</strong></td><td><strong>20₼</strong></td><td><strong>60₼</strong></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-success px-2 py-1">SPONSORED</span></td>
+                                <td class="text-left text-muted small">Məhsulunuz kateqoriya siyahısının yuxarısında "Sponsored" etiketiylə çıxır</td>
+                                <td><strong>5₼</strong></td><td><strong>10₼</strong></td><td><strong>30₼</strong></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-danger px-2 py-1">HOT_TRENDING</span></td>
+                                <td class="text-left text-muted small">Məhsulunuz "Trend Məhsullar" bölməsinde ön sırada görünür</td>
+                                <td><strong>7₼</strong></td><td><strong>15₼</strong></td><td><strong>45₼</strong></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active promotions table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-warning">Aktiv Promosyonlarım</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>Məhsul</th>
+                        <th>Promosyon Növü</th>
+                        <th>Başlama</th>
+                        <th>Bitmə</th>
+                        <th>Ödənildi</th>
+                        <th>Status</th>
+                        <th>Ləğv Et</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(promotions)}">
+                        <td colspan="7" class="text-center text-muted py-4">
+                            Aktiv promosyon yoxdur. Yeni promosyon alın!
+                        </td>
+                    </tr>
+                    <tr th:each="promo : ${promotions}">
+                        <td th:text="${promo.productName}"></td>
+                        <td>
+                            <span th:switch="${promo.promotionType?.name()}">
+                                <span th:case="'FEATURED'" class="badge badge-primary">Featured</span>
+                                <span th:case="'SPONSORED'" class="badge badge-success">Sponsored</span>
+                                <span th:case="'HOT_TRENDING'" class="badge badge-danger">Hot Trending</span>
+                                <span th:case="*" th:text="${promo.promotionType}"></span>
+                            </span>
+                        </td>
+                        <td th:text="${#temporals.format(promo.startDate, 'dd.MM.yyyy')}"></td>
+                        <td th:text="${#temporals.format(promo.endDate, 'dd.MM.yyyy')}"></td>
+                        <td th:text="${#numbers.formatDecimal(promo.amountPaid, 1, 2) + ' ₼'}"></td>
+                        <td>
+                            <span th:switch="${promo.status?.name()}">
+                                <span th:case="'ACTIVE'" class="badge badge-success">Aktiv</span>
+                                <span th:case="'PENDING'" class="badge badge-warning">Gözlənilir</span>
+                                <span th:case="'EXPIRED'" class="badge badge-secondary">Bitib</span>
+                                <span th:case="'CANCELLED'" class="badge badge-danger">Ləğv edilib</span>
+                                <span th:case="*" th:text="${promo.status}"></span>
+                            </span>
+                        </td>
+                        <td>
+                            <form th:if="${promo.status?.name() == 'ACTIVE' or promo.status?.name() == 'PENDING'}"
+                                  th:action="@{/seller/promotions/cancel/{id}(id=${promo.id})}" method="post"
+                                  onsubmit="return confirm('Promosyonu ləğv etmək istədiyinizə əminsiniz?')">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-danger btn-sm">Ləğv Et</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buy Promotion Modal -->
+    <div class="modal fade" id="buyModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title"><i class="fas fa-bullhorn mr-2"></i>Promosyon Satın Al</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <form th:action="@{/seller/promotions/buy}" th:object="${dto}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label>Məhsul <span class="text-danger">*</span></label>
+                            <select class="form-control" th:field="*{productId}">
+                                <option value="">Məhsul seçin...</option>
+                                <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name}"></option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Promosyon Növü <span class="text-danger">*</span></label>
+                            <select class="form-control" th:field="*{promotionType}">
+                                <option value="">Növ seçin...</option>
+                                <option th:each="pt : ${promotionTypes}" th:value="${pt}" th:text="${pt}"></option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Müddət (gün) <span class="text-danger">*</span></label>
+                            <select class="form-control" th:field="*{durationDays}">
+                                <option value="">Müddət seçin...</option>
+                                <option value="3">3 Gün</option>
+                                <option value="7">7 Gün</option>
+                                <option value="30">30 Gün</option>
+                            </select>
+                        </div>
+
+                        <div class="alert alert-info small">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Mövcud balansınızdan düşüləcək. Balansınız yetərli olmadıqda əməliyyat ləğv edilir.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Bağla</button>
+                        <button type="submit" class="btn btn-warning font-weight-bold">
+                            <i class="fas fa-shopping-cart mr-1"></i> Satın Al
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

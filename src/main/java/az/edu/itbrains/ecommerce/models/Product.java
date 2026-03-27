@@ -1,6 +1,7 @@
 package az.edu.itbrains.ecommerce.models;
 
 
+import az.edu.itbrains.ecommerce.enums.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +40,15 @@ public class Product {
 
     @ManyToOne
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(name = "product_status", length = 20)
+    private ProductStatus productStatus = ProductStatus.ACTIVE;
 
     @Builder.Default
     @OneToMany(mappedBy = "product")

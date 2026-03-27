@@ -52,6 +52,9 @@ public class User implements UserDetails {
     @Builder.Default
     private List<Role> roles = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user")
+    private Seller seller;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
