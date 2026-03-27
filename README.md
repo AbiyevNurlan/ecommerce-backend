@@ -1,48 +1,100 @@
-# ITBrains E-Commerce Platform
+﻿<div align="center">
 
-Spring Boot 3.5 + Java 21 əsaslı tam funksional e-ticarət platforması. Məhsul kataloqu, səbət idarəetməsi, sifariş sistemi, admin panel, Spring Security, Flyway migration, Docker, CI/CD pipeline daxildir.
+# 🛒 ShopHub — Multi-Vendor E-Commerce Platform
 
----
+**A production-grade marketplace where sellers list their products, buyers place orders, and promotions drive visibility — all secured, tested, and containerized.**
 
-## 📋 Mündəricat
+[![Java](https://img.shields.io/badge/Java-21-orange?style=flat-square&logo=openjdk)](https://openjdk.org/projects/jdk/21/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.7-brightgreen?style=flat-square&logo=springboot)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?style=flat-square&logo=postgresql)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=flat-square&logo=docker)](https://www.docker.com/)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?style=flat-square&logo=githubactions)](https://github.com/features/actions)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-- [Tech Stack](#-tech-stack)
-- [Arxitektura](#-arxitektura)
-- [Domain Modelləri](#-domain-modelləri)
-- [Tələblər](#-tələblər)
-- [Sürətli Başlama (Docker ilə)](#-sürətli-başlama-docker-ilə)
-- [Local Başlama (Docker olmadan)](#-local-başlama-docker-olmadan)
-- [Environment Variables](#-environment-variables)
-- [Default Giriş Məlumatları](#-default-giriş-məlumatları)
-- [API / Routes Overview](#-routes-overview)
-- [Test Yazısı](#-test-yazısı)
-- [CI/CD](#-cicd)
-- [Layihənin Xüsusiyyətləri](#-layihənin-xüsusiyyətləri)
-- [Contributing](#-contributing)
+[Live Demo](#) · [Quick Start](#-quick-start-with-docker) · [API Docs](#-routes-reference) · [Report Bug](https://github.com/AbiyevNurlan/ecommerce-backend/issues)
+
+</div>
 
 ---
 
-## 🛠 Tech Stack
+## What is ShopHub?
 
-| Sahə | Texnologiya |
+ShopHub is a fully-featured **multi-vendor e-commerce platform** built on Java 21 and Spring Boot 3.5. It gives you a complete marketplace out of the box:
+
+- **Buyers** browse a rich product catalog with category, color, and size filters, add items to their cart, and checkout in seconds.
+- **Sellers** apply for a storefront, list their products, and pay to boost their listings through a flexible promotion system.
+- **Admins** manage the entire platform — categories, products, orders, seller approvals, and seller balances — from a sleek dashboard.
+
+No third-party marketplace fees. No vendor lock-in. Your platform, your rules.
+
+---
+
+## Why ShopHub?
+
+| Pain Point | How ShopHub Solves It |
 |---|---|
-| **Backend** | Java 21, Spring Boot 3.5.7, Spring MVC, Spring Data JPA (Hibernate) |
-| **Frontend** | Thymeleaf 3 + Layout Dialect, Bootstrap 4, jQuery |
-| **Database** | PostgreSQL 16, Flyway (versiyalanmış migration) |
-| **Security** | Spring Security 6, BCrypt, CSRF qoruması, Role-based access (ADMIN / USER / SELLER) |
-| **Messaging** | Spring AMQP (RabbitMQ) |
-| **Testing** | JUnit 5, Mockito, MockMvc, H2 (in-memory, integration tests üçün) |
-| **Logging** | Logback (logback-spring.xml), SLF4J |
-| **Build** | Maven 3.9, Maven Wrapper |
-| **DevOps** | Docker (multi-stage), Docker Compose, GitHub Actions CI/CD |
-| **Code Quality** | OWASP Dependency-Check (CVSS ≥ 9 build-i dayandırır), JaCoCo coverage |
-| **Utilities** | Lombok, ModelMapper 3.2, Flyway |
+| Building a marketplace from scratch takes months | Fully working multi-vendor system, ready to deploy today |
+| Promotion/advertising systems are complex | Built-in balance-based promotion engine with 3 types × 3 durations |
+| Managing sellers manually is a headache | Structured seller application → admin approval workflow |
+| Security is an afterthought | BCrypt passwords, CSRF protection, role-based access on every route |
+| "Works on my machine" syndrome | Docker Compose spins up the full stack (app + PostgreSQL) in one command |
+| Untested code breaks in production | JUnit 5 unit tests + MockMvc integration tests + automated CI pipeline |
 
 ---
 
-## 🏗 Arxitektura
+## Core Features
 
-Layihə **Layered MVC (Model–View–Controller)** arxitekturası ilə qurulub:
+### For Buyers
+- **Rich product catalog** — filter by category, color, and size simultaneously
+- **Smart shopping cart** — add, update quantity, or remove items; cart persists per user
+- **Seamless checkout** — one-page checkout with address entry; instant order confirmation
+- **Order tracking** — real-time order status from `PENDING` through `DELIVERED`
+- **User accounts** — secure registration, login, and forgot-password flow
+
+### For Sellers
+- **Seller storefront** — apply with a shop name and description; admin approves within minutes
+- **Product management** — list products with images, pricing, discounts, and barcode; every new product goes through admin review before going live
+- **Promotion engine** — pay with your balance to feature products in prime spots:
+
+  | Promotion Type | Placement | 3 Days | 7 Days | 30 Days |
+  |---|---|---|---|---|
+  | **FEATURED** | Homepage "Featured Products" section | $10 | $20 | $60 |
+  | **SPONSORED** | Top of category listing with "Sponsored" badge | $5 | $10 | $30 |
+  | **HOT TRENDING** | "Trending Now" section — high-traffic real estate | $7 | $15 | $45 |
+
+- **Balance & transaction history** — every debit and credit is recorded; full audit trail
+- **Revenue analytics** — dashboard shows total products, active promotions, order count, and total revenue
+
+### For Admins
+- **Full platform control** — manage categories, products, colors, sizes, and orders
+- **Seller management** — approve or reject seller applications with one click; credit seller balances directly
+- **Order pipeline** — update order status across the full lifecycle
+- **Commission configuration** — set individual commission rates per seller
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Language** | Java 21 |
+| **Framework** | Spring Boot 3.5.7 — MVC, Data JPA, Security, Scheduling |
+| **View Layer** | Thymeleaf 3 + Layout Dialect + Spring Security extras |
+| **Database** | PostgreSQL 16 with Flyway versioned migrations (V1–V4) |
+| **ORM** | Hibernate 6 via Spring Data JPA |
+| **Security** | Spring Security 6 — BCrypt, CSRF, session fixation protection, role-based access |
+| **Testing** | JUnit 5, Mockito, MockMvc, H2 in-memory (integration tests) |
+| **Logging** | Logback with `logback-spring.xml` — colored console + rolling file output |
+| **Build** | Maven 3.9 + Maven Wrapper (no local Maven install needed) |
+| **Containerization** | Docker multi-stage build, Docker Compose |
+| **CI/CD** | GitHub Actions — build, test, Docker image build, OWASP security scan |
+| **Utilities** | Lombok, ModelMapper 3.2, Hikari connection pool |
+
+---
+
+## Architecture
+
+ShopHub follows a clean **Layered MVC** architecture with strict separation of concerns:
 
 ```
 Browser ──► Controller ──► Service ──► Repository ──► PostgreSQL
@@ -52,35 +104,41 @@ Browser ──► Controller ──► Service ──► Repository ──► Po
 
 ```
 src/main/java/az/edu/itbrains/ecommerce/
-├── config/               # ModelMapper, RabbitMQ, Security konfiqurasiyaları
-├── controllers/          # Storefront HTTP handler-ləri
-│   ├── AuthController     # /register, /login, /forgot-password
-│   ├── HomeController     # / (ana səhifə)
-│   ├── ShopController     # /shop, /shop/detail/{seoUrl}
-│   ├── BasketController   # /basket/add, /basket/remove/{id}
-│   ├── CartController     # /cart, /cart/checkout, /cart/order
-│   ├── OrderController    # /orders/my-orders
-│   ├── seller/            # Satıcı panel controller-ləri (/seller/**)
-│   │   └── SellerController
-│   └── admin/             # Admin panel controller-ləri (/dashboard/**)
+├── controllers/
+│   ├── AuthController          # /register, /login, /forgot-password
+│   ├── HomeController          # / (homepage — featured & trending products)
+│   ├── ShopController          # /shop, /shop/detail/{seoUrl}
+│   ├── BasketController        # /basket/add, /basket/remove/{id}
+│   ├── CartController          # /cart, /cart/checkout, /cart/order
+│   ├── OrderController         # /orders/my-orders
+│   ├── seller/
+│   │   └── SellerController    # /seller/** (dashboard, products, promotions, balance)
+│   └── admin/
 │       ├── DashboardController
 │       ├── CategoryController
 │       ├── ProductController
 │       ├── ColorController
 │       ├── SizeController
 │       ├── AdminOrderController
-│       └── AdminSellerController
-├── dtos/                 # Data Transfer Objects
-│   ├── product/          # ProductCreateDto, ProductUpdateDto, ProductDto
-│   └── seller/           # SellerApplyDto, SellerDashboardDto, SellerAdminDto,
-│                         # PromotionCreateDto, PromotionDto, SellerTransactionDto, BalanceCreditDto
-├── enums/                # OrderStatus, PromotionType, PromotionStatus, ProductStatus, TransactionType
-├── exceptions/           # GlobalExceptionHandler, ResourceNotFoundException, ServiceException
-├── helpers/              # DataSeeder (ilk açılışda demo data), PromotionExpiryScheduler
-├── models/               # JPA Entity-lər (14 entity)
-├── repositories/         # Spring Data JPA repository interface-ləri
-├── security/             # SecurityConfig, CustomUserDetailsService
-└── services/             # Business logic (interface + impls/)
+│       └── AdminSellerController  # /dashboard/sellers/**
+├── dtos/
+│   ├── product/                # ProductCreateDto, ProductUpdateDto, ProductDto
+│   └── seller/                 # SellerApplyDto, SellerDashboardDto, SellerAdminDto,
+│                               # PromotionCreateDto, PromotionDto,
+│                               # SellerTransactionDto, BalanceCreditDto
+├── enums/
+│   ├── OrderStatus             # PENDING → CONFIRMED → SHIPPED → DELIVERED → CANCELLED
+│   ├── ProductStatus           # DRAFT → PENDING_REVIEW → ACTIVE / REJECTED / SUSPENDED
+│   ├── PromotionType           # FEATURED | SPONSORED | HOT_TRENDING
+│   ├── PromotionStatus         # PENDING → ACTIVE → EXPIRED / CANCELLED
+│   └── TransactionType         # CREDIT | PROMO_DEBIT | COMMISSION_DEBIT
+├── helpers/
+│   ├── DataSeeder              # Seeds admin user + demo data on first startup
+│   └── PromotionExpiryScheduler  # @Scheduled — expires outdated promotions hourly
+├── models/                     # 14 JPA entities
+├── repositories/               # Spring Data JPA interfaces
+├── security/                   # SecurityConfig, CustomUserDetailsService
+└── services/                   # Business logic
     ├── SellerService
     ├── PromotionService
     └── impls/
@@ -88,669 +146,326 @@ src/main/java/az/edu/itbrains/ecommerce/
 
 ---
 
-## 🗄 Domain Modelləri
+## Data Model
 
-| Entity | Açıqlama |
+| Entity | Description |
 |---|---|
-| `User` | İstifadəçi — ad, soyad, email, şifrə (BCrypt), rollar |
+| `User` | Platform user — name, email, BCrypt password, roles |
 | `Role` | `ROLE_ADMIN` / `ROLE_USER` / `ROLE_SELLER` |
-| `Product` | Məhsul — ad, qiymət, endirim, barkod, kateqoriya, şəkillər, `seller`, `productStatus` |
-| `Category` | Kateqoriya — ad, SEO URL |
-| `Color` | Rəng |
-| `Size` | Ölçü |
-| `ColorSize` | Məhsul–Rəng–Ölçü əlaqəsi (stok cədvəli) |
-| `Photo` | Məhsul şəkilləri (selected = əsas şəkil) |
-| `Basket` | Səbət sətiri — istifadəçi, məhsul, miqdar |
-| `Order` | Sifariş — ünvan, status, sifariş elementləri |
-| `OrderItem` | Sifariş sətiri — məhsul, miqdar, qiymət |
-| `Seller` | Satıcı profili — mağaza adı, balans, komissiya dərəcəsi, təsdiq statusu |
-| `Promotion` | Məhsul promosyonu — növ, müddət, ödənilən məbləğ, status |
-| `SellerTransaction` | Satıcı balans əməliyyatları — kredit, promo debet, komissiya debet |
-
-**Sifariş statusları:** `PENDING → CONFIRMED → SHIPPED → DELIVERED → CANCELLED`
-
-**Məhsul statusları:** `DRAFT → PENDING_REVIEW → ACTIVE / REJECTED / SUSPENDED`
-
-**Promosyon növləri:** `FEATURED` (Ana səhifə), `SPONSORED` (Kateqoriya başı), `HOT_TRENDING` (Trend bölməsi)
-
-**Promosyon statusları:** `PENDING → ACTIVE → EXPIRED / CANCELLED`
+| `Product` | Product — name, price, discount, barcode, category, photos, seller, status |
+| `Category` | Category with SEO-friendly URL slug |
+| `Color` | Color option |
+| `Size` | Size option |
+| `ColorSize` | Product × Color × Size inventory table (stock per combination) |
+| `Photo` | Product photos (one marked as primary) |
+| `Basket` | Shopping cart line — user, product, quantity |
+| `Order` | Order — shipping address, status, line items |
+| `OrderItem` | Order line — product snapshot, quantity, price at purchase time |
+| `Seller` | Seller profile — shop name, balance, commission rate, approval status |
+| `Promotion` | Product promotion — type, duration, amount paid, status |
+| `SellerTransaction` | Balance audit log — every credit, promo debit, and commission debit |
 
 ---
 
-## 📌 Tələblər
+## Three-Role System
 
-| Alət | Versiya |
-|---|---|
-| Java (JDK) | 21+ |
-| Maven | 3.9+ (və ya daxili `mvnw`) |
-| Docker & Docker Compose | Ən son versiya |
-| PostgreSQL | 16 (yalnız local inkişaf — Docker-da avtomatik qalxır) |
+```
+┌─────────────┐    /register      ┌─────────────┐
+│   Visitor   │ ──────────────►  │  ROLE_USER  │
+└─────────────┘                   └──────┬──────┘
+                                         │ /seller/apply
+                                         ▼
+                                   ┌─────────────┐
+                                   │   PENDING   │ ◄── Admin reviews
+                                   └──────┬──────┘
+                              Approve ▼         ▼ Reject
+                                ┌───────────┐  (stays ROLE_USER)
+                                │ROLE_SELLER│
+                                └───────────┘
+                                     │
+                    Automatic redirect to /seller/dashboard after login
+```
+
+**Admin** (`ROLE_ADMIN`) — Full platform access via `/dashboard/**`  
+**Seller** (`ROLE_SELLER`) — Storefront management via `/seller/**`  
+**User** (`ROLE_USER`) — Shopping, cart, orders  
 
 ---
 
-## 🐳 Sürətli Başlama (Docker ilə)
+## Quick Start with Docker
+
+The fastest way to run ShopHub locally — no Java, no PostgreSQL install needed:
 
 ```bash
-# 1. Repo-nu klonlayın
+# 1. Clone the repository
 git clone https://github.com/AbiyevNurlan/ecommerce-backend.git
 cd ecommerce-backend
 
-# 2. Environment faylını yaradın
+# 2. Configure environment
 cp .env.example .env
-# .env faylını açın və DB_PASSWORD-u dəyişin
+# Open .env and set DB_PASSWORD
 
-# 3. Docker Compose ilə işə salın
+# 3. Launch everything
 docker-compose up --build -d
 
-# 4. Logları izləyin
+# 4. Watch the startup logs
 docker-compose logs -f app
 ```
 
-Tətbiq **http://localhost:8080** ünvanında qalxacaq.
+Open **http://localhost:8080** — the platform is live.
 
-**Admin ilkin giriş (DataSeeder tərəfindən avtomatik yaradılır):**
-
-| Alan | Dəyər |
-|---|---|
-| Email | `admin@admin.com` |
-| Şifrə | `Admin@123` |
-
-**Dayandırmaq:**
-
+**To stop:**
 ```bash
-docker-compose down        # Konteynerləri dayandır
-docker-compose down -v     # + verilənlər bazası data-sını sil
+docker-compose down          # stop containers
+docker-compose down -v       # stop + wipe the database
 ```
 
 ---
 
-## 💻 Local Başlama (Docker olmadan)
+## Local Development (Without Docker)
 
-### 1. PostgreSQL-i qurun və verilənlər bazası yaradın
+### Prerequisites
 
+| Tool | Version |
+|---|---|
+| Java (JDK) | 21+ |
+| Maven | 3.9+ (or use the included `mvnw`) |
+| PostgreSQL | 16 |
+
+### Setup
+
+**1. Create the database:**
 ```sql
 CREATE DATABASE ecommerce_db;
 ```
 
-### 2. Application properties-i konfiqurasiya edin
-
+**2. Configure the application:**
 ```bash
-cp src/main/resources/application.properties.example src/main/resources/application.properties
+cp src/main/resources/application.properties.example \
+   src/main/resources/application.properties
 ```
 
-`application.properties` faylında dəyişdirin:
-
+Edit `application.properties`:
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/ecommerce_db
 spring.datasource.username=postgres
 spring.datasource.password=YOUR_PASSWORD
 ```
 
-> ⚠️ `application.properties` faylı `.gitignore`-dadır — GitHub-a push olunmur!
+> `application.properties` is in `.gitignore` — your credentials are never committed.
 
-### 3. Tətbiqi işə salın
-
+**3. Run:**
 ```bash
 # Windows
-mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev
+mvnw.cmd spring-boot:run
 
 # Linux / macOS
-./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+./mvnw spring-boot:run
 ```
 
-Tətbiq **http://localhost:8080** ünvanında başlayacaq.
-Flyway avtomatik olaraq `db/migration/` qovluğundakı SQL skriptlərini icra edəcək.
+Flyway automatically runs all migrations on startup. The `DataSeeder` creates the admin account and demo data on first run.
 
 ---
 
-## 🔑 Environment Variables
+## Default Credentials
 
-| Dəyişən | Nümunə | Açıqlama |
-|---|---|---|
-| `DB_NAME` | `ecommerce_db` | PostgreSQL verilənlər bazasının adı |
-| `DB_USERNAME` | `postgres` | DB istifadəçi adı |
-| `DB_PASSWORD` | `your_password_here` | DB şifrəsi — mütləq dəyişin! |
-| `DB_HOST` | `db` | DB host (Docker-da `db`, local-da `localhost`) |
-| `DB_PORT` | `5432` | PostgreSQL portu |
-| `SPRING_PROFILES_ACTIVE` | `prod` | Aktiv profil: `dev`, `prod`, `test` |
-| `UPLOAD_DIR` | `/app/uploads` | Yüklənən faylların saxlanılacağı qovluq |
-
-> `.env.example` faylında bütün dəyişənlər şərhlərlə izah olunub.
-
----
-
-## 🔐 Default Giriş Məlumatları
-
-Tətbiq ilk dəfə başladıqda `DataSeeder` avtomatik olaraq aşağıdakıları yaradır:
-
-| Rol | Email | Şifrə | Qeyd |
+| Role | Email | Password | Notes |
 |---|---|---|---|
-| **ADMIN** | `admin@admin.com` | `Admin@123` | DataSeeder tərəfindən avtomatik |
-| **USER** | — | — | `/register` səhifəsindən qeydiyyat |
-| **SELLER** | — | — | `/register` + `/seller/apply` → Admin təsdiqləyir |
+| **Admin** | `admin@admin.com` | `Admin@123` | Created by DataSeeder on first startup |
+| **User** | — | — | Self-register at `/register` |
+| **Seller** | — | — | Register → apply at `/seller/apply` → await admin approval |
 
-> ⚠️ **İstehsalda** admin şifrəsini mütləq dəyişin!
-
-### Satıcı Olmaq Prosesi
-
-```
-1. /register  →  Adi istifadəçi kimi qeydiyyat (ROLE_USER)
-2. /seller/apply  →  Mağaza adı + açıqlama ilə müraciət
-3. Admin Panel (/dashboard/sellers)  →  Admin müraciəti görür
-4. "Təsdiqlə" düyməsi  →  İstifadəçiyə ROLE_SELLER əlavə olunur
-5. Login yenidən  →  /seller/dashboard-a avtomatik yönləndirilir
-```
+> Change the admin password before going to production.
 
 ---
 
-## 🗺 Routes Overview
+## Routes Reference
 
-### Storefront (Public)
+### Public Storefront
 
-| Method | Route | Açıqlama |
+| Method | Route | Description |
 |---|---|---|
-| GET | `/` | Ana səhifə (featured & hot-trending məhsullar) |
-| GET | `/shop` | Bütün məhsullar (kateqoriya, rəng, ölçü filtrləri) |
-| GET | `/shop/detail/{seoUrl}` | Məhsul detal səhifəsi |
-| GET | `/forgot-password` | Şifrəni unutdum |
+| GET | `/` | Homepage — featured and trending products |
+| GET | `/shop` | Full catalog with filters (category, color, size) |
+| GET | `/shop/detail/{seoUrl}` | Product detail page |
+| GET | `/login` | Login page |
+| GET | `/register` | Registration page |
+| GET | `/forgot-password` | Password reset page |
 
-### Authentication
+### Authenticated Buyer Routes
 
-| Method | Route | Açıqlama |
+| Method | Route | Description |
 |---|---|---|
-| GET | `/login` | Giriş səhifəsi |
-| POST | `/login` | Spring Security form login |
-| GET | `/register` | Qeydiyyat səhifəsi |
-| POST | `/register` | Yeni istifadəçi yarat |
-| GET | `/logout` | Çıxış (POST Spring Security) |
+| POST | `/basket/add` | Add product to cart |
+| POST | `/basket/remove/{id}` | Remove product from cart |
+| GET | `/cart` | View cart |
+| GET | `/cart/checkout` | Checkout page |
+| POST | `/cart/order` | Place order |
+| GET | `/orders/my-orders` | Order history |
 
-### Authenticated User Routes
+### Seller Panel (`/seller/**` — requires `ROLE_SELLER`)
 
-| Method | Route | Açıqlama |
+| Method | Route | Description |
 |---|---|---|
-| GET | `/cart` | Səbət səhifəsi |
-| POST | `/basket/add` | Səbətə məhsul əlavə et |
-| POST | `/basket/remove/{productId}` | Səbətdən məhsul sil |
-| GET | `/cart/checkout` | Checkout səhifəsi |
-| POST | `/cart/order` | Sifariş ver |
-| GET | `/orders/my-orders` | İstifadəçinin sifarişləri |
+| GET | `/seller/apply` | Apply to become a seller (open to all users) |
+| POST | `/seller/apply` | Submit seller application |
+| GET | `/seller/dashboard` | Dashboard — stats, balance, revenue |
+| GET | `/seller/products` | My product listings |
+| GET | `/seller/products/create` | New product form |
+| POST | `/seller/products/create` | Submit product (enters PENDING_REVIEW) |
+| POST | `/seller/products/delete/{id}` | Delete own product |
+| GET | `/seller/promotions` | Active promotions + price table |
+| POST | `/seller/promotions/buy` | Purchase a promotion (deducted from balance) |
+| POST | `/seller/promotions/cancel/{id}` | Cancel an active promotion |
+| GET | `/seller/balance` | Balance & full transaction ledger |
 
-### Seller Panel (`/seller/**` — SELLER rolu tələb olunur)
+### Admin Panel (`/dashboard/**` — requires `ROLE_ADMIN`)
 
-| Method | Route | Açıqlama |
+| Method | Route | Description |
 |---|---|---|
-| GET | `/seller/apply` | Satıcı müraciət formu (icazəsiz) |
-| POST | `/seller/apply` | Müraciəti göndər |
-| GET | `/seller/dashboard` | Satıcı idarə paneli — balans, statistika |
-| GET | `/seller/products` | Öz məhsullarım siyahısı |
-| GET | `/seller/products/create` | Yeni məhsul formu |
-| POST | `/seller/products/create` | Məhsul yarat (PENDING_REVIEW statusu ilə) |
-| POST | `/seller/products/delete/{id}` | Öz məhsulunu sil |
-| GET | `/seller/promotions` | Aktiv promosyonlar + qiymət cədvəli |
-| POST | `/seller/promotions/buy` | Promosyon satın al (balansdan düşür) |
-| POST | `/seller/promotions/cancel/{id}` | Aktiv promosyonu ləğv et |
-| GET | `/seller/balance` | Balans + əməliyyat tarixi |
-
-### Promosyon Qiymət Cədvəli
-
-| Növ | 3 Gün | 7 Gün | 30 Gün | Effekt |
-|---|---|---|---|---|
-| **FEATURED** | 10₼ | 20₼ | 60₼ | Ana səhifə "Seçilmiş Məhsullar" bölməsi |
-| **SPONSORED** | 5₼ | 10₼ | 30₼ | Kateqoriya siyahısının yuxarısı |
-| **HOT_TRENDING** | 7₼ | 15₼ | 45₼ | "Trend Məhsullar" bölməsi |
-
-> Promosyon sürəsi bitdikdə `PromotionExpiryScheduler` hər saat avtomatik expire edir.
-
-### Admin Panel (`/dashboard/**` — ADMIN rolu tələb olunur)
-
-| Method | Route | Açıqlama |
-|---|---|---|
-| GET | `/dashboard` | Admin dashboard |
-| GET | `/dashboard/category` | Kateqoriya siyahısı |
-| GET | `/dashboard/category/create` | Yeni kateqoriya formu |
-| POST | `/dashboard/category/create` | Kateqoriya yarat |
-| GET | `/dashboard/category/update/{id}` | Kateqoriya yenilə formu |
-| POST | `/dashboard/category/update/{id}` | Kateqoriyani yenilə |
-| POST | `/dashboard/category/delete/{id}` | Kateqoriyani sil |
-| GET | `/dashboard/product` | Məhsul siyahısı |
-| GET | `/dashboard/product/create` | Yeni məhsul formu |
-| POST | `/dashboard/product/create` | Məhsul yarat |
-| GET | `/dashboard/product/update/{id}` | Məhsul yenilə formu |
-| POST | `/dashboard/product/update/{id}` | Məhsulu yenilə |
-| POST | `/dashboard/product/delete/{id}` | Məhsulu sil |
-| GET | `/dashboard/color` | Rəng siyahısı |
-| POST | `/dashboard/color/create` | Rəng yarat |
-| POST | `/dashboard/color/delete/{id}` | Rəngi sil |
-| GET | `/dashboard/size` | Ölçü siyahısı |
-| POST | `/dashboard/size/create` | Ölçü yarat |
-| POST | `/dashboard/size/delete/{id}` | Ölçüyü sil |
-| GET | `/dashboard/order` | Sifariş siyahısı |
-| POST | `/dashboard/order/status/{id}` | Sifariş statusunu yenilə |
-| GET | `/dashboard/sellers` | Satıcı müraciətlərinin siyahısı |
-| POST | `/dashboard/sellers/approve/{id}` | Satıcını təsdiqlə (ROLE_SELLER əlavə et) |
-| POST | `/dashboard/sellers/reject/{id}` | Satıcını rədd et (ROLE_SELLER sil) |
-| POST | `/dashboard/sellers/credit` | Satıcı balansına pul əlavə et |
+| GET | `/dashboard` | Admin overview |
+| GET/POST | `/dashboard/category/**` | Category CRUD |
+| GET/POST | `/dashboard/product/**` | Product CRUD |
+| GET/POST | `/dashboard/color/**` | Color CRUD |
+| GET/POST | `/dashboard/size/**` | Size CRUD |
+| GET | `/dashboard/order` | All orders |
+| POST | `/dashboard/order/status/{id}` | Update order status |
+| GET | `/dashboard/sellers` | Seller applications list |
+| POST | `/dashboard/sellers/approve/{id}` | Approve seller (grants ROLE_SELLER) |
+| POST | `/dashboard/sellers/reject/{id}` | Reject seller |
+| POST | `/dashboard/sellers/credit` | Add balance to seller account |
 
 ---
 
-## 🧪 Test Yazısı
+## Environment Variables
 
-Layihədə iki səviyyəli test əhatəsi var:
+| Variable | Example | Description |
+|---|---|---|
+| `DB_NAME` | `ecommerce_db` | PostgreSQL database name |
+| `DB_USERNAME` | `postgres` | Database user |
+| `DB_PASSWORD` | `your_secure_password` | Database password — always change this |
+| `DB_HOST` | `db` | Host (`db` in Docker, `localhost` for local dev) |
+| `DB_PORT` | `5432` | PostgreSQL port |
+| `SPRING_PROFILES_ACTIVE` | `prod` | Active profile: `dev`, `prod`, or `test` |
+| `UPLOAD_DIR` | `/app/uploads` | Directory for uploaded files |
 
-### Unit Testlər (`src/test/.../services/`)
+See `.env.example` for the full annotated template.
 
-Xalis Mockito ilə yalnız service logikasını test edir — verilənlər bazası iştirak etmir.
+---
 
-| Test Sinfi | Əhatə |
+## Testing
+
+ShopHub has two levels of test coverage:
+
+### Unit Tests — Pure Business Logic
+
+Runs with Mockito only. Zero database involvement. Fast.
+
+| Test Class | Coverage |
 |---|---|
-| `UserServiceImplTest` | Qeydiyyat (yeni email, dublikat, rol tapılmayanda) |
-| `BasketServiceImplTest` | Səbətə əlavə et, artır, sil |
-| `OrderServiceImplTest` | Sifariş ver, boş səbət, status yenilə |
-| `ProductServiceImplTest` | CRUD — yarat, yenilə, sil, tapılmayan ID |
+| `UserServiceImplTest` | Registration — new email, duplicate email, role not found |
+| `BasketServiceImplTest` | Add to cart, increment quantity, remove item |
+| `OrderServiceImplTest` | Place order, empty cart guard, status transitions |
+| `ProductServiceImplTest` | Create, update, delete, not-found handling |
 
-### İnteqrasiya Testləri (`src/test/.../controllers/`)
+### Integration Tests — Full Stack
 
-`@SpringBootTest` + `MockMvc` + H2 in-memory database ilə bütün stack-i test edir.
+`@SpringBootTest` + `MockMvc` + H2 in-memory database. Tests the entire request→response cycle.
 
-| Test Sinfi | Əhatə |
+| Test Class | Coverage |
 |---|---|
-| `AuthControllerIntegrationTest` | Login, qeydiyyat, CSRF qoruması, validation |
-| `ProductControllerIntegrationTest` | Admin CRUD, icazə yoxlanması (403/redirect) |
+| `AuthControllerIntegrationTest` | Login, registration, CSRF protection, validation errors |
+| `ProductControllerIntegrationTest` | Admin CRUD, unauthorized access (403 / redirect) |
 
-### Testləri icra etmək
+### Running Tests
 
 ```bash
-# Bütün testlər
-mvnw.cmd test                        # Windows
-./mvnw test                          # Linux/macOS
+# All tests
+./mvnw test                        # Linux/macOS
+mvnw.cmd test                      # Windows
 
-# Yalnız unit testlər
+# Unit tests only
 mvnw.cmd test -Dtest="*ServiceImpl*"
 
-# Coverage hesabatı (target/site/jacoco/index.html)
+# Generate coverage report → target/site/jacoco/index.html
 mvnw.cmd verify
 ```
 
-**Test profili** (`application-test.properties`): H2 in-memory DB, Flyway aktiv, DataSeeder aktiv.
-
 ---
 
-## ⚙️ CI/CD
+## CI/CD Pipeline
 
-Layihə **GitHub Actions** ilə `.github/workflows/ci.yml` pipeline-ına malikdir:
+Every push triggers the GitHub Actions pipeline defined in `.github/workflows/ci.yml`:
 
-| Job | Trigger | Açıqlama |
+| Job | Trigger | What It Does |
 |---|---|---|
-| **build-and-test** | Hər push/PR | Maven build + JUnit testlər (PostgreSQL 16 service container ilə). Surefire XML + JaCoCo coverage artifact olaraq yüklənir. |
-| **docker-build** | `main` branch-a push | Multi-stage Dockerfile, SHA + `latest` tag ilə image build edilir. Docker Hub push üçün hazır (secrets konfiqurasiyası lazımdır). |
-| **security-scan** | `main` branch-a push | OWASP Dependency-Check — CVSS ≥ 9 olan CVE tapıldıqda build uğursuz sayılır. HTML/XML report artifact olaraq saxlanılır. |
-
-**Trigger-lər:** `main` və `develop` branch-larına `push`, `main`-ə `pull_request`.
+| **build-and-test** | Every push & PR | Maven build + full test suite against a real PostgreSQL 16 service container. Surefire XML and JaCoCo coverage uploaded as artifacts. |
+| **docker-build** | Push to `main` | Multi-stage Docker image built and tagged with commit SHA + `latest`. |
+| **security-scan** | Push to `main` | OWASP Dependency-Check — build fails if any dependency has CVSS score ≥ 9. HTML/XML report saved as artifact. |
 
 ---
 
-## ✨ Layihənin Xüsusiyyətləri
+## Database Migrations
 
-### ✅ Tamamlanmış
-
-| Xüsusiyyət | Qeyd |
+| File | Contents |
 |---|---|
-| Məhsul kataloqu | Kateqoriya, rəng, ölçü filtrləri; ColorSize stok cədvəli |
-| Çoxlu məhsul şəkli | Photo entity; selected şəkil əsas görünür |
-| Səbət sistemi | Əlavə et / artır / sil; istifadəçiyə bağlı |
-| Sifariş sistemi | Checkout → PENDING; admin statusu dəyişir |
-| İstifadəçi autentifikasiyası | Qeydiyyat, giriş (form login), çıxış |
-| Şifrəni unutdum | Forgot password səhifəsi |
-| Role-based access | ADMIN / USER / SELLER — method security + Thymeleaf sec: |
-| Admin panel | Dashboard + CRUD (kateqoriya, məhsul, rəng, ölçü, sifariş, satıcılar) |
-| **Multi-vendor Marketplace** | Satıcılar öz məhsullarını əlavə edib sata bilir |
-| **Satıcı Paneli** | Dashboard, məhsullar, promosyonlar, balans + əməliyyat tarixi |
-| **Promosyon Sistemi** | 3 növ × 3 müddət (3/7/30 gün) — balansdan avtomatik düşülür |
-| **Satıcı Müraciəti** | İstifadəçi müraciət edir → Admin təsdiqlər → ROLE_SELLER verilir |
-| **Komissiya Sistemi** | Hər satıcı üçün konfiqurasiya edilə bilən komissiya dərəcəsi |
-| **PromotionExpiryScheduler** | Saatlıq @Scheduled task — müddəti bitmiş promosyonları expire edir |
-| Spring Security | BCrypt, CSRF, session fixation mühafizəsi |
-| Database migration | Flyway V1-V4 migration skriptləri |
-| DataSeeder | İlk açılışda admin istifadəçi + demo data |
-| Docker dəstəyi | Multi-stage Dockerfile, non-root user, healthcheck |
-| Docker Compose | App + PostgreSQL 16 birlikdə qalxır |
-| CI/CD pipeline | GitHub Actions — build, test, Docker, OWASP scan |
-| Unit testlər | JUnit 5 + Mockito, 4 service üçün |
-| İnteqrasiya testləri | MockMvc + H2, 2 controller üçün |
-| Logging | Logback — konsolda rəngli, `logs/` qovluğunda fayl |
-| Production konfiqurasiya | Hikari pool, server compression, Actuator `/health` |
+| `V1__init.sql` | Full schema — all tables, foreign keys, indexes, seed roles |
+| `V2__fix_order_status_column_type.sql` | Fixed `order_status` column type |
+| `V3__fix_demo_product_photo.sql` | Fixed demo product image URL |
+| `V4__add_seller_promotion.sql` | `sellers`, `promotions`, `seller_transactions` tables; adds `seller_id` and `product_status` to `product`; inserts `ROLE_SELLER` |
 
-### 🚧 Gələcək Planlar
-
-| Xüsusiyyət | Qeyd |
-|---|---|
-| Ödəniş inteqrasiyası | Stripe / PayPal |
-| Email bildirişlər | Sifariş təsdiqi, şifrə sıfırlama (SMTP) |
-| REST API | Mobil tətbiq üçün JSON endpoint-lər |
-| Elasticsearch | Məhsul tam-mətn axtarışı |
-| Redis caching | Kateqoriya / məhsul siyahısı keşləmə |
-| Şəkil yükləmə | MultipartFile ilə real fayl yükləmə |
+Flyway validates and applies migrations automatically on every startup. No manual SQL scripts to run.
 
 ---
 
-## 🗂 Database Schema (Əsas cədvəllər)
+## Security Highlights
 
-```
-users ──< user_roles >── roles
-products ──< photos
-products ──< color_sizes >── colors
-              color_sizes >── sizes
-users ──< baskets >── products
-users ──< orders ──< order_items >── products
-categories ──< products
-```
-
-**Flyway migration faylları:**
-
-| Fayl | Məzmun |
-|---|---|
-| `V1__init.sql` | Tam schema — bütün cədvəllər, foreign key-lər, indekslər |
-| `V2__fix_order_status_column_type.sql` | `order_status` sütununun tipi düzəldildi |
-| `V3__fix_demo_product_photo.sql` | Demo məhsul şəkil URL-i düzəldildi |
-| `V4__add_seller_promotion.sql` | `sellers`, `promotions`, `seller_transactions` cədvəlləri; `product.seller_id`, `product.product_status`; `ROLE_SELLER` |
+- **BCrypt password hashing** — industry standard, salted, cost-factor configurable
+- **CSRF protection** on all state-changing forms (Thymeleaf CSRF token helper included)
+- **Session fixation protection** — new session ID issued after successful login
+- **Role-based route security** — enforced at both `SecurityConfig` and `@PreAuthorize` levels
+- **Input validation** — `@Valid` + Bean Validation on all form-bound DTOs
+- **OWASP Dependency-Check** — catches vulnerable dependencies before they reach production
+- **Non-root Docker user** — container runs as a dedicated non-root user
 
 ---
 
-## 🤝 Contributing
+## Roadmap
+
+| Feature | Status |
+|---|---|
+| Payment gateway integration (Stripe / PayPal) | Planned |
+| Email notifications (order confirmation, password reset) | Planned |
+| REST JSON API for mobile clients | Planned |
+| Elasticsearch full-text product search | Planned |
+| Redis caching for catalog pages | Planned |
+| Seller analytics dashboard with charts | Planned |
+
+---
+
+## Contributing
+
+Contributions are welcome.
 
 1. Fork the repository
-2. Feature branch yaradın: `git checkout -b feature/your-feature-name`
-3. Dəyişiklikləri commit edin: `git commit -m "feat: add your feature"`
-4. Push edin: `git push origin feature/your-feature-name`
-5. Pull Request açın
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Commit your changes: `git commit -m "feat: describe your change"`
+4. Push the branch: `git push origin feature/your-feature`
+5. Open a Pull Request against `main`
 
-**Commit mesajı konvensiyası:** [Conventional Commits](https://www.conventionalcommits.org/)
-- `feat:` — yeni xüsusiyyət
-- `fix:` — xəta düzəltmə
-- `refactor:` — yenidən strukturlaşdırma
-- `test:` — test əlavəsi / düzəltmə
-- `docs:` — sənədləşmə
-- `chore:` — alət, konfiqurasiya dəyişikliyi
+Please follow the existing code style and ensure all tests pass before opening a PR.
 
 ---
 
-## 📄 Lisenziya
+## License
 
-Bu layihə təhsil məqsədlidir. Öyrənmə istinadı olaraq istifadə edə bilərsiniz.
-
----
-
-*ITBrains Academy — Spring Boot E-Commerce Platform | Java 21 + Spring Boot 3.5*
-
+Distributed under the MIT License. See `LICENSE` for details.
 
 ---
 
-## 📋 Mündəricat
+<div align="center">
 
-- [Tech Stack](#-tech-stack)
-- [Arxitektura](#-arxitektura)
-- [Tələblər](#-tələblər)
-- [Sürətli Başlama (Docker ilə)](#-sürətli-başlama-docker-ilə)
-- [Local Başlama (Docker olmadan)](#-local-başlama-docker-olmadan)
-- [Environment Variables](#-environment-variables)
-- [Default Giriş Məlumatları](#-default-giriş-məlumatları)
-- [CI/CD](#-cicd)
-- [Layihənin Xüsusiyyətləri](#-layihənin-xüsusiyyətləri)
-- [Routes Overview](#-routes-overview)
-- [Contributing](#-contributing)
+Built with Java 21 · Spring Boot 3.5 · PostgreSQL 16 · Docker  
+**[Back to top](#-shophub--multi-vendor-e-commerce-platform)**
 
----
-
-## 🛠 Tech Stack
-
-| Sahə | Texnologiya |
-|---|---|
-| **Backend** | Java 21, Spring Boot 3.5.7, Spring MVC, Spring Data JPA |
-| **Frontend** | Thymeleaf + Layout Dialect, Bootstrap, jQuery |
-| **Database** | PostgreSQL 16, Flyway (migration) |
-| **Security** | Spring Security, BCrypt, CSRF, Role-based (ADMIN / USER) |
-| **Messaging** | Spring AMQP (RabbitMQ) |
-| **DevOps** | Docker, Docker Compose, GitHub Actions CI/CD, OWASP Dependency-Check |
-
----
-
-## 🏗 Arxitektura
-
-Layihə **MVC (Model–View–Controller)** arxitekturasına əsaslanır:
-
-```
-Browser  →  Controller  →  Service  →  Repository  →  PostgreSQL
-              ↓
-          Thymeleaf (HTML)
-```
-
-```
-src/main/java/az/edu/itbrains/ecommerce/
-├── config/           # Konfiqurasiya (ModelMapper, RabbitMQ, Security)
-├── controllers/      # HTTP request handler-lər
-│   └── admin/        # Admin panel controller-ləri
-├── dtos/             # Data Transfer Objects
-├── enums/            # Enum-lar (Role)
-├── exceptions/       # Custom exception-lar
-├── helpers/          # Utility sinifləri
-├── models/           # JPA Entity sinifləri
-├── repositories/     # Spring Data JPA repository-lər
-├── security/         # SecurityConfig, UserDetailsService
-└── services/         # Business logic (interface + impls/)
-```
-
----
-
-## 📌 Tələblər
-
-| Alət | Versiya |
-|---|---|
-| Java (JDK) | 21+ |
-| Maven | 3.9+ |
-| Docker & Docker Compose | Ən son versiya |
-| PostgreSQL | 16 (yalnız local inkişaf üçün — Docker-da avtomatik qaldırılır) |
-
----
-
-## 🐳 Sürətli Başlama (Docker ilə)
-
-```bash
-# 1. Repo-nu klonlayın
-git clone https://github.com/AbiyevNurlan/ecommerce-backend.git
-cd ecommerce-backend
-
-# 2. Environment faylını yaradın
-cp .env.example .env
-# .env faylını açın və DB_PASSWORD-u dəyişin
-
-# 3. Docker Compose ilə işə salın
-docker-compose up --build -d
-
-# 4. Logları yoxlayın
-docker-compose logs -f app
-```
-
-Tətbiq **http://localhost:8080** ünvanında qalxacaq.
-
-**Dayandırmaq üçün:**
-
-```bash
-docker-compose down          # Konteynerləri dayandır
-docker-compose down -v       # + verilənlər bazası data-sını sil
-```
-
----
-
-## 💻 Local Başlama (Docker olmadan)
-
-### 1. PostgreSQL-i qurun və verilənlər bazası yaradın
-
-```sql
-CREATE DATABASE ecommerce_db;
-```
-
-### 2. Application properties-i konfiqurasiya edin
-
-```bash
-cp src/main/resources/application.properties.example src/main/resources/application.properties
-```
-
-`application.properties` faylında verilənlər bazası məlumatlarını dəyişin:
-
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/ecommerce_db
-spring.datasource.username=postgres
-spring.datasource.password=YOUR_PASSWORD
-```
-
-> ⚠️ `application.properties` faylı `.gitignore`-dadır — GitHub-a push etməyin!
-
-### 3. Tətbiqi işə salın
-
-```bash
-# Linux / macOS
-./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
-
-# Windows
-mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev
-```
-
-Tətbiq **http://localhost:8080** ünvanında başlayacaq.
-
----
-
-## 🔑 Environment Variables
-
-| Dəyişən | Nümunə | Açıqlama |
-|---|---|---|
-| `DB_NAME` | `ecommerce_db` | PostgreSQL verilənlər bazasının adı |
-| `DB_USERNAME` | `postgres` | DB istifadəçi adı |
-| `DB_PASSWORD` | `your_password_here` | DB şifrəsi — mütləq dəyişin |
-| `DB_HOST` | `db` | DB host (Docker-da `db`, local-da `localhost`) |
-| `DB_PORT` | `5432` | PostgreSQL portu |
-| `SPRING_PROFILES_ACTIVE` | `prod` | Aktiv profil: `dev`, `prod`, `test` |
-| `UPLOAD_DIR` | `/app/uploads` | Yüklənən faylların saxlanılacağı qovluq |
-
-> `.env.example` faylında bütün dəyişənlər Azərbaycanca şərhlərlə izah olunub.
-
----
-
-## 🔐 Default Giriş Məlumatları
-
-İlk dəfə istifadə üçün verilənlər bazasında istifadəçi yaradın:
-
-| Rol | Qeydiyyat |
-|---|---|
-| **User** | `/register` səhifəsindən qeydiyyatdan keçin |
-| **Admin** | Əvvəlcə qeydiyyatdan keçin, sonra DB-dən `ADMIN` rolunu təyin edin |
-
-Admin rolu təyin etmək üçün:
-
-```sql
--- İstifadəçinin ID-sini tapın
-SELECT id FROM users WHERE email = 'your@email.com';
-
--- Admin rolunu təyin edin
-INSERT INTO user_roles (user_id, role_id) VALUES (<user_id>, <admin_role_id>);
-```
-
----
-
-## ⚙️ CI/CD
-
-Layihə **GitHub Actions** ilə avtomatik CI/CD pipeline-a malikdir (`.github/workflows/ci.yml`):
-
-| İş (Job) | Təsvir |
-|---|---|
-| **Build & Test** | Maven ilə build + testlər (PostgreSQL 16 service ilə). Surefire reports və JaCoCo coverage artifact olaraq yüklənir |
-| **Docker Build** | Multi-stage Dockerfile ilə Docker image build edilir. SHA tag + `latest` tag. Docker Hub push üçün hazır (comment-ləri açın) |
-| **Security Scan** | OWASP Dependency-Check ilə dependency-lərdə CVE yoxlanılır (CVSS ≥ 9 build-i dayandırır). Report artifact olaraq yüklənir |
-
-**Trigger-lər:** `main` və `develop` branch-larına push, `main`-ə pull request.
-
----
-
-## ✨ Layihənin Xüsusiyyətləri
-
-### ✅ Tamamlanmış
-
-| Xüsusiyyət | Təsvir |
-|---|---|
-| Məhsul kataloqu | Kateqoriya, rəng, ölçü, şəkil idarəetməsi |
-| Səbət sistemi | Məhsul əlavə et, sil, miqdarı yenilə |
-| Sifariş sistemi | Checkout, sifariş tarixi |
-| İstifadəçi autentifikasiyası | Qeydiyyat, giriş, çıxış, şifrəni unutdum |
-| Admin panel | Dashboard, CRUD əməliyyatları (kateqoriya, məhsul, rəng, ölçü) |
-| Spring Security | Form login, BCrypt, CSRF, role-based access |
-| Docker dəstəyi | Multi-stage Dockerfile, Docker Compose, non-root user |
-| CI/CD | GitHub Actions — build, test, Docker build, security scan |
-| Database migration | Flyway ilə versiyalanmış schema migration |
-| Unit testlər | JUnit 5 + Mockito ilə service layer testləri |
-| İnteqrasiya testləri | Controller layer testləri (MockMvc) |
-| Production config | Hikari pool, server compression, Actuator health |
-
-### 🚧 Gələcək planlar
-
-| Xüsusiyyət | Təsvir |
-|---|---|
-| Ödəniş inteqrasiyası | Stripe / PayPal ilə online ödəniş |
-| Email bildirişlər | Sifariş təsdiqi, şifrə sıfırlama |
-| REST API | Mobil tətbiq üçün JSON API |
-| Axtarış | Elasticsearch ilə məhsul axtarışı |
-| Caching | Redis ilə performans optimallaşdırması |
-
----
-
-## 🗺 Routes Overview
-
-### Storefront
-
-| Method | Route | Təsvir |
-|---|---|---|
-| GET | `/` | Ana səhifə |
-| GET | `/shop` | Bütün məhsullar |
-| GET | `/shop/detail/{id}` | Məhsul detalları |
-| GET | `/cart` | Səbətə bax |
-| POST | `/basket/add` | Səbətə məhsul əlavə et |
-| POST | `/basket/remove/{id}` | Səbətdən sil |
-| GET | `/cart/checkout` | Checkout səhifəsi |
-| POST | `/cart/order` | Sifariş ver |
-
-### Authentication
-
-| Method | Route | Təsvir |
-|---|---|---|
-| GET/POST | `/login` | Giriş |
-| GET/POST | `/register` | Qeydiyyat |
-| GET | `/logout` | Çıxış |
-| GET | `/forgot-password` | Şifrəni unutdum |
-
-### Admin Panel (`/admin/**` — ADMIN rolu tələb olunur)
-
-| Method | Route | Təsvir |
-|---|---|---|
-| GET | `/admin` | Dashboard |
-| GET/POST | `/admin/categories/**` | Kateqoriya CRUD |
-| GET/POST | `/admin/products/**` | Məhsul CRUD |
-| GET/POST | `/admin/colors/**` | Rəng CRUD |
-| GET/POST | `/admin/sizes/**` | Ölçü CRUD |
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Feature branch yaradın: `git checkout -b feature/your-feature-name`
-3. Dəyişiklikləri commit edin: `git commit -m "feat: add your feature"`
-4. Push edin: `git push origin feature/your-feature-name`
-5. Pull Request açın
-
----
-
-## 📄 Lisenziya
-
-Bu layihə təhsil məqsədlidir. Öyrənmə istinadı olaraq istifadə edə bilərsiniz.
-
----
-
-*ITBrains Academy — Spring Boot E-Commerce Platform*
+</div>
