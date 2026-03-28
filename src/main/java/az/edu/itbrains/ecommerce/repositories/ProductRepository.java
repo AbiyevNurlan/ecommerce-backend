@@ -40,5 +40,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     /** Recommendation cold-start fallback: same category, excluding current product. */
     List<Product> findTop4ByCategoryIdAndIdNot(Long categoryId, Long id);
+
+    /** Filter products by category SEO URL */
+    List<Product> findByCategorySeoUrlOrderByIdDesc(String seoUrl);
 }
 

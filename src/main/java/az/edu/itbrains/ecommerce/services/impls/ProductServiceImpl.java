@@ -95,6 +95,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<ProductDashboardDto> getProductsByCategory(String categorySeoUrl) {
+        return productRepository.findByCategorySeoUrlOrderByIdDesc(categorySeoUrl)
+                .stream()
+                .map(product -> {
+                    ProductDashboardDto dto = modelMapper.map(product, ProductDashboardDto.class);
+                    dto.setImage(getSelectedPhotoUrl(product));
+                    return dto;
+                })
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<ProductFeaturedDto> getFeaturedProducts() {
         return productRepository.findTop3ByFeaturedTrueOrderByIdDesc()
                 .stream()

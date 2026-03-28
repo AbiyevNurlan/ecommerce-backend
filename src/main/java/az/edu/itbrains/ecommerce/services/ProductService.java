@@ -18,6 +18,11 @@ public interface ProductService {
     List<ProductDashboardDto> searchProducts(String query);
 
     /**
+     * Filter products by category SEO URL (e.g. "women", "men").
+     */
+    List<ProductDashboardDto> getProductsByCategory(String categorySeoUrl);
+
+    /**
      * Collaborative filtering recommendations for the given product.
      * Returns up to 4 products ranked by co-purchase frequency.
      */
